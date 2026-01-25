@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta name="robots" content="Index,Follow">
+    <base href="https://www.useintuicao.com.br/" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Use Intuição é uma marca de lingerie goiana desde 2009..." />
+    <meta property="og:title" content="Use Intuição Lingerie - Loja Virtual" />
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="https://www.useintuicao.com.br/" />
+    <meta property="og:image" content="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1762972130_bannerMobile1.jpg">
+    <title translate="no">Use Intuição Lingerie - Loja Virtual</title>
+    
+    <link rel="icon" type="image/png" sizes="96x96" href="https://imagens.viashopmoda.com.br/UPLOAD/Goiania_Intuicao/Principal/1711999676_iconeFavicon.png"/>
+    
+    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/reset-css/reset.min.css">
+    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/fontawesome/v6.7.2/css/all.min.css">
+    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/geral.min.css?1767817041">
+    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/index.css?1767817041">
+    
+    <style>
+        /* Estilização para o container do catálogo não quebrar o layout da loja */
+        #container-catalogo-revendedor {
+            background: #fff;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            max-width: 1200px;
+        }
+        .catalogo-status-bar { padding: 10px; background: #f9f9f9; border-bottom: 1px solid #eee; margin-bottom: 10px; }
+    </style>
+</head>
+
+<body data-plataforma="viashopmoda" data-token-api-loja="bmIlMkZ0cTV2YnFMTkx6SGpRNUF6d1l5RG5QUEExOXo3VGhWV3BsR1lQUTdOcTdnbUtuVEJwRWNSV3R3ZFNPU0xqdWVsYkg5YUZrOUglMkJFOFlvbHh6QUVnJTNEJTNE">
+    
+    <h1 class="tags-seo notranslate">Use Intuição Lingerie - Loja Virtual</h1>
+
+    <div id="topoPagina" class="topo"></div>
+    
+    <div id="logoPrincipal">
+        <div class="elemento-responsivo">
+            <a href="https://www.useintuicao.com.br">
+                <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/logo-principal.png" title="Use Intuição Lingerie" alt="loja virtual Use Intuição Lingerie">
+            </a>
+        </div>
+    </div>
+
+    <section id="container-catalogo-revendedor" class="elemento-responsivo">
+        <div class="catalogo-status-bar">
+            <strong>Área do Revendedor:</strong> Gerencie suas novidades e preços abaixo.
+        </div>
+        
+        <textarea id="jsonTraducaoGeral" style="display:none;">
+            {"vendido":"Vendido","copiado":"Copiado","referencia":"Referência","seu_link":"Seu link","editar_precos":"Editar preços e estoque"}
+        </textarea>
+
+        <div class="container-modal-revendedor"></div>
+        <div class="vendedora-perfil"></div>
+        <div class="conteudo-catalogo-dinamico carregando">
+            <span class="fal fa-spin fa-spinner"></span> Carregando ferramentas de revendedor...
+        </div>
+    </section>
+
+    <section class="banner-principal" style="min-height:270px;"></section>
+
+    <section class="container-produtos elemento-responsivo">
+        <div class="div-produtos-index">
+            <ul id="ulListaProdutos"></ul>
+        </div>
+    </section>
+
+    <footer>
+        <div class="elemento-responsivo">
+            <p>Use Intuição Lingerie © 2026 - Área Administrativa Integrada</p>
+        </div>
+    </footer>
+
+    <script src="https://imagens.viashopmoda.com.br/libs/jquery/jquery.min.js"></script>
+    
+    <script src="https://imagens.viashopmoda.com.br/js/main.js?1767817041"></script>
+    
+    <script>
+        // Simulação da inicialização do Catálogo dentro da Loja
+        $(document).ready(function() {
+            console.log("Sistema Emet Echad: Loja e Catálogo integrados.");
+            // Aqui os scripts do HTML 2 (como js/produtos.js) seriam chamados
+            // para popular a div .conteudo-catalogo-dinamico
+        });
+    </script>
+
+</body>
+</html>
