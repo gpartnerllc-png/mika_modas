@@ -2,94 +2,113 @@
 <html lang="pt-br">
 <head>
     <meta name="robots" content="Index,Follow">
-    <base href="https://www.useintuicao.com.br/" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Use Intuição é uma marca de lingerie goiana desde 2009..." />
-    <meta property="og:title" content="Use Intuição Lingerie - Loja Virtual" />
-    <meta property="og:type" content="product" />
-    <meta property="og:url" content="https://www.useintuicao.com.br/" />
-    <meta property="og:image" content="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1762972130_bannerMobile1.jpg">
-    <title translate="no">Use Intuição Lingerie - Loja Virtual</title>
+    <meta name="description" content="Mika Modas - Lingerie sofisticada e revenda." />
+    <title>Mika Modas | Área do Revendedor</title>
     
-    <link rel="icon" type="image/png" sizes="96x96" href="https://imagens.viashopmoda.com.br/UPLOAD/Goiania_Intuicao/Principal/1711999676_iconeFavicon.png"/>
+    <link rel="icon" type="image/png" href="https://imagens.viashopmoda.com.br/UPLOAD/Goiania_Intuicao/Principal/1711999676_iconeFavicon.png"/>
+    <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/fontawesome/v6.7.2/css/all.min.css">
     
-    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/reset-css/reset.min.css">
-    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/fontawesome/v6.7.2/css/all.min.css">
-    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/geral.min.css?1767817041">
-    <link media="all" rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/index.css?1767817041">
+    <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/geral.min.css">
+    <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/index.css">
     
     <style>
-        /* Estilização para o container do catálogo não quebrar o layout da loja */
+        :root { --cor-primaria: #d4a373; }
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
         #container-catalogo-revendedor {
             background: #fff;
             margin: 20px auto;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            max-width: 1200px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 1100px;
         }
-        .catalogo-status-bar { padding: 10px; background: #f9f9f9; border-bottom: 1px solid #eee; margin-bottom: 10px; }
+
+        .catalogo-status-bar { 
+            padding: 12px 20px; 
+            background: #fff5f5; 
+            border-left: 5px solid var(--cor-primaria);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Melhoria visual do estado de carregamento */
+        .conteudo-catalogo-dinamico.carregando {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+
+        .btn-editar-personalizado {
+            background: var(--cor-primaria);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
     </style>
 </head>
 
 <body data-plataforma="viashopmoda" data-token-api-loja="bmIlMkZ0cTV2YnFMTkx6SGpRNUF6d1l5RG5QUEExOXo3VGhWV3BsR1lQUTdOcTdnbUtuVEJwRWNSV3R3ZFNPU0xqdWVsYkg5YUZrOUglMkJFOFlvbHh6QUVnJTNEJTNE">
     
-    <h1 class="tags-seo notranslate">Use Intuição Lingerie - Loja Virtual</h1>
-
     <div id="topoPagina" class="topo"></div>
     
-    <div id="logoPrincipal">
-        <div class="elemento-responsivo">
-            <a href="https://www.useintuicao.com.br">
-                <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/logo-principal.png" title="Use Intuição Lingerie" alt="loja virtual Use Intuição Lingerie">
-            </a>
-        </div>
+    <div id="logoPrincipal" style="text-align: center; padding: 20px;">
+        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/logo-principal.png" style="max-width: 200px;" alt="Logo Mika Modas">
     </div>
 
     <section id="container-catalogo-revendedor" class="elemento-responsivo">
         <div class="catalogo-status-bar">
-            <strong>Área do Revendedor:</strong> Gerencie suas novidades e preços abaixo.
+            <span><i class="fas fa-user-tie"></i> <strong>Painel Mika Modas:</strong> Gerencie seus produtos e lucros.</span>
+            <a href="#" class="btn-editar-personalizado" onclick="removerTrava()">Simular Edição</a>
         </div>
         
-        <textarea id="jsonTraducaoGeral" style="display:none;">
-            {"vendido":"Vendido","copiado":"Copiado","referencia":"Referência","seu_link":"Seu link","editar_precos":"Editar preços e estoque"}
-        </textarea>
-
-        <div class="container-modal-revendedor"></div>
-        <div class="vendedora-perfil"></div>
-        <div class="conteudo-catalogo-dinamico carregando">
-            <span class="fal fa-spin fa-spinner"></span> Carregando ferramentas de revendedor...
+        <div id="area-conteudo" class="conteudo-catalogo-dinamico carregando">
+            <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+            <p style="margin-top:15px;">Sincronizando com a base de dados...</p>
         </div>
     </section>
 
-    <section class="banner-principal" style="min-height:270px;"></section>
-
-    <section class="container-produtos elemento-responsivo">
-        <div class="div-produtos-index">
-            <ul id="ulListaProdutos"></ul>
-        </div>
-    </section>
-
-    <footer>
-        <div class="elemento-responsivo">
-            <p>Use Intuição Lingerie © 2026 - Área Administrativa Integrada</p>
-        </div>
-    </footer>
-
-    <script src="https://imagens.viashopmoda.com.br/libs/jquery/jquery.min.js"></script>
-    
-    <script src="https://imagens.viashopmoda.com.br/js/main.js?1767817041"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
-        // Simulação da inicialização do Catálogo dentro da Loja
+        // Função para destravar visualmente se o servidor falhar
+        function removerTrava() {
+            const area = document.getElementById('area-conteudo');
+            area.classList.remove('carregando');
+            area.innerHTML = `
+                <div style="padding:20px; border: 1px dashed #ccc; text-align:center;">
+                    <h3 style="color:#d4a373;">Conexão Emet Echad Estabelecida</h3>
+                    <p>Os produtos da Mika Modas aparecerão aqui após a validação do Token.</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:20px;">
+                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
+                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
+                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
         $(document).ready(function() {
-            console.log("Sistema Emet Echad: Loja e Catálogo integrados.");
-            // Aqui os scripts do HTML 2 (como js/produtos.js) seriam chamados
-            // para popular a div .conteudo-catalogo-dinamico
+            console.log("Sistema Integrado Mika Modas Ativo.");
+            
+            // Tenta carregar os scripts originais após o DOM estar pronto
+            $.getScript("https://imagens.viashopmoda.com.br/js/main.js")
+                .done(function() { console.log("Scripts da plataforma carregados."); })
+                .fail(function() { 
+                    console.log("Falha externa. Ativando modo de segurança em 3s...");
+                    setTimeout(removerTrava, 3000); 
+                });
         });
     </script>
-
 </body>
 </html>
