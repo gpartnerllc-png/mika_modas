@@ -5,109 +5,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="Mika Modas - Lingerie sofisticada e revenda." />
-    <title>Mika Modas | Área do Revendedor</title>
+    <title>Use Intuição Lingerie - Painel de Revenda</title>
     
-    <link rel="icon" type="image/png" href="https://imagens.viashopmoda.com.br/UPLOAD/Goiania_Intuicao/Principal/1711999676_iconeFavicon.png"/>
+    <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/reset-css/reset.min.css">
     <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/libs/fontawesome/v6.7.2/css/all.min.css">
-    
     <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/geral.min.css">
     <link rel="stylesheet" href="https://imagens.viashopmoda.com.br/css/index.css">
     
     <style>
-        :root { --cor-primaria: #d4a373; }
-        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
-        #container-catalogo-revendedor {
+        #painel-revenda-container {
             background: #fff;
             margin: 20px auto;
             padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            max-width: 1100px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 1140px;
         }
-
-        .catalogo-status-bar { 
-            padding: 12px 20px; 
-            background: #fff5f5; 
-            border-left: 5px solid var(--cor-primaria);
+        .status-revendedor {
+            background: #fdf2f2;
+            padding: 15px;
+            border-left: 5px solid #d4a373;
             margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-family: sans-serif;
         }
-
-        /* Melhoria visual do estado de carregamento */
-        .conteudo-catalogo-dinamico.carregando {
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-        }
-
-        .btn-editar-personalizado {
-            background: var(--cor-primaria);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-        }
+        .conteudo.carregando { text-align: center; padding: 40px; }
     </style>
 </head>
 
-<body data-plataforma="viashopmoda" data-token-api-loja="bmIlMkZ0cTV2YnFMTkx6SGpRNUF6d1l5RG5QUEExOXo3VGhWV3BsR1lQUTdOcTdnbUtuVEJwRWNSV3R3ZFNPU0xqdWVsYkg5YUZrOUglMkJFOFlvbHh6QUVnJTNEJTNE">
-    
+<body data-plataforma="viashopmoda" 
+      data-subdominioImagens="imagens" 
+      data-urlBasePlataforma="viashopmoda.com.br" 
+      data-token="TkdTQzZBblI1cWZONE9IQyUyQm5kcHl5TDROSExJaFNVMURsWU1DYXJLT2NUNTI2MiUyRmd1ckY3emgyck53dktmVUs=">
+
     <div id="topoPagina" class="topo"></div>
     
     <div id="logoPrincipal" style="text-align: center; padding: 20px;">
-        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/logo-principal.png" style="max-width: 200px;" alt="Logo Mika Modas">
+        <a href="https://www.useintuicao.com.br">
+            <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/logo-principal.png" style="max-width: 200px;" alt="Use Intuição">
+        </a>
     </div>
 
-    <section id="container-catalogo-revendedor" class="elemento-responsivo">
-        <div class="catalogo-status-bar">
-            <span><i class="fas fa-user-tie"></i> <strong>Painel Mika Modas:</strong> Gerencie seus produtos e lucros.</span>
-            <a href="#" class="btn-editar-personalizado" onclick="removerTrava()">Simular Edição</a>
+    <main id="painel-revenda-container">
+        <div class="status-revendedor">
+            <i class="fas fa-store"></i> <strong>Modo Revendedor Ativo:</strong> 
+            Gerencie seus preços de venda e estoque do catálogo virtual abaixo.
+        </div>
+
+        <textarea id="jsonTraducaoGeral" style="display:none;">
+            {"vendido":"Vendido","referencia":"Ref","seu_estoque":"Seu estoque","seu_preco_de_venda":"Seu preço de venda","editar_precos":"Editar preços e estoque","acessar_catalogo":"Acessar catálogo","login":{"titulo":"Identifique-se","saudacao":"Olá, {PRIMEIRO_NOME_CLIENTE}."}}
+        </textarea>
+
+        <div class="container-modal"></div>
+        <div class="vendedora"></div>
+        
+        <div class="conteudo carregando">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p>Carregando ferramentas de revenda...</p>
         </div>
         
-        <div id="area-conteudo" class="conteudo-catalogo-dinamico carregando">
-            <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-            <p style="margin-top:15px;">Sincronizando com a base de dados...</p>
-        </div>
-    </section>
+        <div class="loja"></div>
+    </main>
+
+    <div class="rodape"></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <script>
-        // Função para destravar visualmente se o servidor falhar
-        function removerTrava() {
-            const area = document.getElementById('area-conteudo');
-            area.classList.remove('carregando');
-            area.innerHTML = `
-                <div style="padding:20px; border: 1px dashed #ccc; text-align:center;">
-                    <h3 style="color:#d4a373;">Conexão Emet Echad Estabelecida</h3>
-                    <p>Os produtos da Mika Modas aparecerão aqui após a validação do Token.</p>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:20px;">
-                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
-                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
-                        <div style="height:150px; background:#eee; border-radius:8px;"></div>
-                    </div>
-                </div>
-            `;
-        }
+    <script src="https://imagens.viashopmoda.com.br/libs/jQuery-Mask-Plugin/jquery.mask.js"></script>
 
+    <script src="https://imagens.viashopmoda.com.br/js/inc_funcoes.js"></script>
+    <script src="https://imagens.viashopmoda.com.br/js/main.js"></script>
+    <script src="https://imagens.viashopmoda.com.br/js/produtos.js"></script>
+    <script src="https://imagens.viashopmoda.com.br/js/vendedora.js"></script>
+    <script src="https://imagens.viashopmoda.com.br/js/login.js"></script>
+
+    <script>
         $(document).ready(function() {
-            console.log("Sistema Integrado Mika Modas Ativo.");
+            // Inicialização do ciclo Emet Echad para Revenda
+            console.log("Sistema de Revenda Mika Modas/Use Intuição Inicializado.");
             
-            // Tenta carregar os scripts originais após o DOM estar pronto
-            $.getScript("https://imagens.viashopmoda.com.br/js/main.js")
-                .done(function() { console.log("Scripts da plataforma carregados."); })
-                .fail(function() { 
-                    console.log("Falha externa. Ativando modo de segurança em 3s...");
-                    setTimeout(removerTrava, 3000); 
-                });
+            // Força a remoção do estado 'carregando' se os scripts demorarem
+            setTimeout(function(){
+                $('.conteudo').removeClass('carregando');
+            }, 5000);
         });
     </script>
 </body>
