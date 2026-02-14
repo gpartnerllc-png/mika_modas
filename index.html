@@ -13,35 +13,21 @@
         body { font-family: 'Montserrat', sans-serif; }
         .promo-bar { background-color: #000; color: #fff; font-size: 11px; padding: 6px 0; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
         .cart-sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        /* Imagens Arredondadas e Efeito Flutuante */
         .product-img { transition: transform 0.5s ease; border-radius: 1.5rem; }
         .product-card { transition: all 0.3s ease; }
         .product-card:hover { transform: translateY(-10px); }
         .product-card:hover .product-img { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-        
         .min-order-alert { font-size: 10px; font-weight: bold; text-transform: uppercase; }
         #main-carousel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; }
         #main-carousel img.active { opacity: 1; }
         .attr-select { background: white; border: 1px solid #ddd; font-size: 9px; padding: 4px; margin-bottom: 4px; text-transform: uppercase; font-weight: bold; width: 100%; cursor: pointer; border-radius: 4px; }
-        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .animate-float { animation: float 3s ease-in-out infinite; }
         @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 5px rgba(219, 39, 119, 0.4); opacity: 1; } 50% { box-shadow: 0 0 25px rgba(219, 39, 119, 0.8); opacity: 0.8; } }
         .animate-pulse-glow { animation: pulse-glow 2s infinite; }
-
-        /* Estilo dos Mini Cartões 3D no Rodapé */
-        .card-3d {
-            background: #fff;
-            padding: 6px;
-            border-radius: 6px;
-            box-shadow: 0 3px 0px #d1d5db;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #e5e7eb;
-        }
+        .card-3d { background: #fff; padding: 6px; border-radius: 6px; box-shadow: 0 3px 0px #d1d5db; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; cursor: pointer; }
         .card-3d:hover { transform: translateY(-2px); box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; }
+        .card-3d.active { box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; background: #fff5f7; }
     </style>
 </head>
 <body class="bg-white">
@@ -52,7 +38,6 @@
             <div class="text-2xl font-bold tracking-tighter text-black uppercase">
                 Miquely<span class="font-light text-pink-600">Modas</span>
             </div>
-            
             <div class="flex items-center gap-5">
                 <div class="relative cursor-pointer" onclick="toggleCart()">
                     <i class="fa-solid fa-bag-shopping text-2xl"></i>
@@ -64,21 +49,21 @@
 
     <section class="relative h-[55vh] md:h-[75vh] bg-gray-200 overflow-hidden" id="main-carousel">
         <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank">
-            <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066305_bannerPrincipal1.jpg" class="meu-banner">
-<img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066304_bannerPrincipal0.jpg" class="meu-banner">
-<img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066305_bannerPrincipal2.jpg" class="meu-banner">
+            <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1765913728_bannerPrincipal2.jpg" class="active">
+            <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1762972131_bannerPrincipal2.jpg">
         </a>
     </section>
 
     <div class="promo-bar font-bold">ATACADO - Pedido Mínimo: R$ 700,00</div>
 
-    <main class="container mx-auto px-4 py-12 pb-32"> <h3 class="text-center text-xl font-bold mb-10 uppercase tracking-[0.3em] text-gray-800">Catálogo Disponível</h3>
+    <main class="container mx-auto px-4 py-12 pb-32"> 
+        <h3 class="text-center text-xl font-bold mb-10 uppercase tracking-[0.3em] text-gray-800">Catálogo Disponível</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8" id="product-list"></div>
     </main>
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[100] translate-x-full cart-sidebar flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-            <h2 class="font-bold uppercase tracking-widest text-sm text-pink-600 text-3d">Pedido de Atacado</h2>
+            <h2 class="font-bold uppercase tracking-widest text-sm text-pink-600">Pedido de Atacado</h2>
             <button onclick="toggleCart()" class="text-2xl">&times;</button>
         </div>
         <div id="cart-content" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
@@ -88,10 +73,9 @@
                 <span id="cart-total">R$ 0,00</span>
             </div>
             <div id="min-order-msg" class="p-3 text-center mb-4 min-order-alert text-red-600"></div>
-            
             <div class="bg-gray-50 text-center rounded-2xl overflow-hidden border shadow-inner">
                 <button id="btn-checkout-appmax" onclick="openPaymentModal()" class="w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
-                    Pagar com Google Pay / Pix / Cartão
+                    Finalizar Compra Segura
                 </button>
                 <p class="text-[9px] py-2 text-gray-500 uppercase font-bold tracking-tighter">
                     Processado com segurança por <strong>Appmax API</strong>.
@@ -107,30 +91,60 @@
                 <button onclick="closePaymentModal()" class="text-2xl text-gray-400 hover:text-black">&times;</button>
             </div>
             
-            <div class="p-6 space-y-4">
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                 <div class="space-y-3">
-                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
-                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
+                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
-                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
+                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                        <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
                     </div>
                 </div>
 
                 <div class="border-t pt-4">
-                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-center">Métodos de Pagamento</p>
-                    <div class="flex justify-center gap-4">
-                        <div class="card-3d"><i class="fa-brands fa-cc-visa text-xl text-blue-800"></i></div>
-                        <div class="card-3d"><i class="fa-brands fa-cc-mastercard text-xl text-red-500"></i></div>
-                        <div class="card-3d"><i class="fa-solid fa-barcode text-xl text-gray-700"></i></div>
-                        <div class="card-3d"><i class="fa-brands fa-pix text-xl text-teal-500"></i></div>
+                    <label class="flex items-center gap-2 mb-4 cursor-pointer">
+                        <input type="checkbox" id="lgpd-consent" checked class="accent-pink-600">
+                        <span class="text-[10px] text-gray-500 font-medium uppercase">Aceito os termos de processamento de dados (LGPD)</span>
+                    </label>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-center">Selecione o Método de Pagamento</p>
+                    <div class="flex justify-center gap-4 mb-4">
+                        <div class="card-3d" id="method-card" onclick="selectMethod('card')"><i class="fa-brands fa-cc-visa text-xl text-blue-800"></i></div>
+                        <div class="card-3d" id="method-boleto" onclick="selectMethod('boleto')"><i class="fa-solid fa-barcode text-xl text-gray-700"></i></div>
+                        <div class="card-3d" id="method-pix" onclick="selectMethod('pix')"><i class="fa-brands fa-pix text-xl text-teal-500"></i></div>
+                    </div>
+
+                    <div id="card-fields" class="hidden space-y-3 bg-gray-50 p-4 rounded-xl">
+                        <input type="text" id="card-number" placeholder="Número do Cartão" class="w-full border p-2 rounded text-sm">
+                        <div class="grid grid-cols-3 gap-2">
+                            <input type="text" id="card-month" placeholder="MM" class="border p-2 rounded text-sm">
+                            <input type="text" id="card-year" placeholder="AA" class="border p-2 rounded text-sm">
+                            <input type="text" id="card-cvv" placeholder="CVV" class="border p-2 rounded text-sm">
+                        </div>
+                        <select id="card-installments" class="w-full border p-2 rounded text-sm">
+                            <option value="1">1x sem juros</option>
+                            <option value="2">2x sem juros</option>
+                            <option value="3">3x sem juros</option>
+                            <option value="4">4x sem juros</option>
+                            <option value="5">5x sem juros</option>
+                            <option value="6">6x sem juros</option>
+                            <option value="7">7x sem juros</option>
+                            <option value="8">8x sem juros</option>
+                            <option value="9">9x sem juros</option>
+                            <option value="10">10x sem juros</option>
+                            <option value="11">11x sem juros</option>
+                            <option value="12">12x com juros</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
             <div class="p-6 bg-gray-50 border-t">
                 <button onclick="confirmarDadosAppmax()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
-                    Confirmar e Ir para Pagamento
+                    Confirmar e Finalizar
                 </button>
             </div>
         </div>
@@ -166,8 +180,10 @@
     <script>
         const MARGEM_LUCRO = 1.50; 
         const MIN_ORDER = 700;
+        const awsEndpoint = 'https://org3zgdxvga5sb377l7yjgyfuu0wmapq.lambda-url.sa-east-1.on.aws/';
         let cart = [];
         let customerData = {}; 
+        let selectedMethod = 'pix';
 
         const extraImages = [
             "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/15/4132_(3)_ec.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/22/2022101311531022506_(6)_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/24/20231206113500_img_7362_e1.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/24/20231206114055_img_7370_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/11/20210629160317ref._4004_(1)_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230330090806whatsapp_image_2023-03-30_at_08.49.20_e1.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/11/20251202095430_intuicao_30_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/15/20250522113207_img_7152_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/15/4111_(2)_ec.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230519102154_whatsappimage20230519at10183828129_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/9/20231117163638_whatsappimage20231117at150951_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/1/20251006155146_intuicao_31_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/22/20231120104222_whatsappimage20231117at104556_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20250821134227_whatsappimage20250821at120153_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/11/20251202101449_intuicao_1728129_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20250821090129_intuicao3_5_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/1/20251218144817_intuicaodez25_31_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/24/20231206122501_img_7426_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20250725112922_whatsappimage20250723at170229_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/26/20250820175544_intuicao3_48_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/25/20250522105424_img_7142_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/7/20250820173918_intuicao3_24_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/25/20251218112643_intuicaodez25_7_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/21/20251006162203_intuicao_17_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/2/20250821095001_intuicao3_8_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/17/20250801100605_img_8262_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/7/20251007082926_intuicao_14_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/24/20231206114319_img_7343_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/11/20250801093940_096a9085_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/28/20250715111609_img_8266_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/11/20250909153843_intuicaoset25_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20250909141405_intuicaoset25_23_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/2/20250909143127_intuicaoset25_49_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/28/20250909144502_intuicaoset25_43_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/28/20251007082031_intuicao_3_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/28/20250522101047_img_716828129_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/30/20250820164925_intuicao3_42_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/22/20250821084610_intuicao3_27_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/30/20250820162500_intuicao3_32_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/6/20220307160240whatsapp_image_2022-03-07_at_14.56.51_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/18/uploadapi_1717558113.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/18/uploadapi_1716580958.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/18/uploadapi_1716578271.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/18/uploadapi_1726157437.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/18/uploadapi_1716834000.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20240517104309_whatsappimage20240517at10183128129_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20231002174846_whatsappimage20231002at174112_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20240517102516_whatsappimage20240517at101916_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230911095939_whatsappimage20230904at105708_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230818142755_whatsappimage20230818at141504_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230623165155_whatsappimage20230623at14352228229_e.jpg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230815143028_whatsappimage20230815at142018_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230818144857_whatsappimage20230818at140055_e.jpeg", "https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230623155233_whatsappimage20230623at143518_e.jpg"
@@ -190,6 +206,8 @@
                 const precoBase = 115.00; 
                 const precoCalc = precoBase * MARGEM_LUCRO;
                 list.innerHTML += generateHTML(`Lingerie Ref ${800+i}`, precoCalc, url, i);
+            });
+        }
 
         function generateHTML(name, price, img, id) {
             return `
@@ -211,16 +229,72 @@
 
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
 
-        function openPaymentModal() { document.getElementById('payment-modal').classList.remove('hidden'); }
+        function openPaymentModal() { 
+            document.getElementById('payment-modal').classList.remove('hidden'); 
+            selectMethod('pix');
+        }
+        
         function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
         
-        function confirmarDadosAppmax() {
+        function selectMethod(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.card-3d').forEach(el => el.classList.remove('active'));
+            const el = document.getElementById(`method-${method}`);
+            if(el) el.classList.add('active');
+            document.getElementById('card-fields').classList.toggle('hidden', method !== 'card');
+        }
+
+        // --- TECNOLOGIA DE CAPTURA DE LEAD (LGPD) ---
+        async function syncLead() {
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            if(!email.includes('@')) return;
+
+            const payload = {
+                action: 'create_customer',
+                consent: document.getElementById('lgpd-consent').checked,
+                firstname: name.split(' ')[0],
+                lastname: name.split(' ').slice(1).join(' '),
+                email: email,
+                telephone: document.getElementById('cust-phone').value,
+                postcode: document.getElementById('cust-cep').value,
+                custom_txt: "Lead Atacado via Modal",
+                products: cart.map(item => ({ product_sku: item.name, product_qty: 1 }))
+            };
+
+            try {
+                await fetch(awsEndpoint, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) { console.warn("Lead sync offline"); }
+        }
+
+        async function confirmarDadosAppmax() {
             const name = document.getElementById('cust-name').value;
             const email = document.getElementById('cust-email').value;
             const cpf = document.getElementById('cust-cpf').value;
-            if(!name || !email || !cpf) { alert("Preencha todos os campos para continuar."); return; }
-            customerData = { name, email, cpf, phone: document.getElementById('cust-phone').value };
-            closePaymentModal();
+            const consent = document.getElementById('lgpd-consent').checked;
+
+            if(!name || !email || !cpf) { alert("Preencha os campos obrigatórios."); return; }
+            if(!consent) { alert("Você precisa aceitar os termos da LGPD."); return; }
+            
+            customerData = { 
+                name, email, cpf, 
+                phone: document.getElementById('cust-phone').value,
+                method: selectedMethod
+            };
+
+            if(selectedMethod === 'card') {
+                customerData.card = {
+                    number: document.getElementById('card-number').value,
+                    month: document.getElementById('card-month').value,
+                    year: document.getElementById('card-year').value,
+                    cvv: document.getElementById('card-cvv').value,
+                    installments: document.getElementById('card-installments').value
+                };
+            }
+
             finalizarPagamentoAppmax();
         }
 
@@ -264,39 +338,48 @@
         }
 
         async function finalizarPagamentoAppmax() {
-            const btn = document.getElementById('btn-checkout-appmax');
-            const originalText = btn.innerText;
-            btn.innerText = "GERANDO CHECKOUT SEGURO...";
-            btn.disabled = true;
+            const btnCheckout = document.querySelector('#payment-modal button');
+            const originalText = btnCheckout.innerText;
+            btnCheckout.innerText = "PROCESSANDO...";
+            btnCheckout.disabled = true;
 
             try {
-                const totalRaw = document.getElementById('cart-total').innerText;
-                const totalNum = parseFloat(totalRaw.replace('R$ ', '').replace('.', '').replace(',', '.'));
                 const payload = {
-                    total: totalNum,
-                    customer: customerData,
-                    products: cart.map(item => ({ name: item.name, qty: 1, price: item.price }))
+                    action: 'checkout', // Identificador para a Lambda
+                    consent: true,
+                    method: selectedMethod,
+                    customer: {
+                        name: customerData.name,
+                        email: customerData.email,
+                        cpf: customerData.cpf,
+                        phone: customerData.phone
+                    },
+                    products: cart.map(item => ({ name: item.name, qty: 1, price: item.price })),
+                    payment: customerData.card || {}
                 };
-                
+
                 const response = await fetch(awsEndpoint, {
                     method: 'POST',
-                    mode: 'cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                const textData = await response.text();
-                let result;
-                try { result = JSON.parse(textData); } catch (e) { throw new Error("Erro na resposta"); }
-                if (result.url) { window.location.href = result.url; } 
-                else { alert("Erro Appmax: " + (result.error || "Dados inválidos")); }
+
+                const result = await response.json();
+
+                if (result.success && result.response.data) {
+                    const data = result.response.data;
+                    alert("Pedido Criado com Sucesso!");
+                    if (data.checkout_url) window.location.href = data.checkout_url;
+                } else {
+                    alert("Erro: " + (result.response.message || "Tente novamente"));
+                }
             } catch (error) {
-                alert("Erro na conexão segura. Tente novamente.");
+                alert("Erro técnico na conexão. Tente novamente mais tarde.");
             } finally {
-                btn.innerText = originalText;
-                btn.disabled = false;
+                btnCheckout.innerText = originalText;
+                btnCheckout.disabled = false;
             }
         }
-
 
         const slides = document.querySelectorAll('#main-carousel img');
         let cur = 0;
