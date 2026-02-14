@@ -71,85 +71,49 @@
         <div class="p-6 border-t bg-white">
             <div class="flex justify-between font-bold text-lg mb-2">
                 <span class="text-gray-500 text-sm uppercase">Subtotal:</span>
-                <span id="cart-total">R$ 0,00</span>
+                <span id="cart-total">R$ 0,00</span><div id="payment-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <div>
+                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-sm">Finalizar Pedido</h3>
+                <p class="text-[10px] text-teal-600 font-bold uppercase">Pagamento via PIX Direto</p>
             </div>
-            <div id="min-order-msg" class="p-3 text-center mb-4 min-order-alert text-red-600"></div>
-            <div class="bg-gray-50 text-center rounded-2xl overflow-hidden border shadow-inner">
-                <button id="btn-checkout-appmax" onclick="openPaymentModal()" class="w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
-                    Finalizar Compra Segura
-                </button>
-                <p class="text-[9px] py-2 text-gray-500 uppercase font-bold tracking-tighter">
-                    Processado com segurança por <strong>Appmax API</strong>.
-                </p>
-            </div>
+            <button onclick="closePaymentModal()" class="text-2xl text-gray-400 hover:text-black">&times;</button>
         </div>
-    </div>
-
-    <div id="payment-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
-            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-sm">Dados de Faturamento</h3>
-                <button onclick="closePaymentModal()" class="text-2xl text-gray-400 hover:text-black">&times;</button>
-            </div>
-            
-            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-                <div class="space-y-3">
-                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
-                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                        <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
-                    </div>
+        
+        <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div id="fields-area" class="space-y-3">
+                <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                    <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
                 </div>
-
-                <div class="border-t pt-4">
-                    <label class="flex items-center gap-2 mb-4 cursor-pointer">
-                        <input type="checkbox" id="lgpd-consent" checked class="accent-pink-600">
-                        <span class="text-[10px] text-gray-500 font-medium uppercase">Aceito os termos de processamento de dados (LGPD)</span>
-                    </label>
-                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-center">Selecione o Método de Pagamento</p>
-                    <div class="flex justify-center gap-4 mb-4">
-                        <div class="card-3d" id="method-card" onclick="selectMethod('card')"><i class="fa-brands fa-cc-visa text-xl text-blue-800"></i></div>
-                        <div class="card-3d" id="method-boleto" onclick="selectMethod('boleto')"><i class="fa-solid fa-barcode text-xl text-gray-700"></i></div>
-                        <div class="card-3d" id="method-pix" onclick="selectMethod('pix')"><i class="fa-brands fa-pix text-xl text-teal-500"></i></div>
-                    </div>
-
-                    <div id="card-fields" class="hidden space-y-3 bg-gray-50 p-4 rounded-xl">
-                        <input type="text" id="card-number" placeholder="Número do Cartão" class="w-full border p-2 rounded text-sm">
-                        <div class="grid grid-cols-3 gap-2">
-                            <input type="text" id="card-month" placeholder="MM" class="border p-2 rounded text-sm">
-                            <input type="text" id="card-year" placeholder="AA" class="border p-2 rounded text-sm">
-                            <input type="text" id="card-cvv" placeholder="CVV" class="border p-2 rounded text-sm">
-                        </div>
-                        <select id="card-installments" class="w-full border p-2 rounded text-sm">
-                            <option value="1">1x sem juros</option>
-                            <option value="2">2x sem juros</option>
-                            <option value="3">3x sem juros</option>
-                            <option value="4">4x sem juros</option>
-                            <option value="5">5x sem juros</option>
-                            <option value="6">6x sem juros</option>
-                            <option value="7">7x sem juros</option>
-                            <option value="8">8x sem juros</option>
-                            <option value="9">9x sem juros</option>
-                            <option value="10">10x sem juros</option>
-                            <option value="11">11x sem juros</option>
-                            <option value="12">12x com juros</option>
-                        </select>
-                    </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                    <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
                 </div>
             </div>
 
-            <div class="p-6 bg-gray-50 border-t">
-                <button onclick="confirmarDadosAppmax()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
-                    Confirmar e Finalizar
-                </button>
+            <div class="border-t pt-4">
+                <label class="flex items-center gap-2 mb-4 cursor-pointer">
+                    <input type="checkbox" id="lgpd-consent" checked class="accent-pink-600">
+                    <span class="text-[10px] text-gray-500 font-medium uppercase">Aceito os termos da LGPD</span>
+                </label>
+                
+                <div id="pix-display-area" class="space-y-3"></div>
             </div>
         </div>
+
+        <div class="p-6 bg-gray-50 border-t" id="modal-footer">
+            <button id="btn-finalizar-pix" onclick="finalizarPagamento()" class="w-full bg-black text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-gray-900 shadow-lg transition-all text-xs flex items-center justify-center gap-2">
+                <i class="fa-brands fa-pix text-teal-400"></i> Gerar QR Code PIX
+            </button>
+        </div>
     </div>
+</div>
 
     <div class="fixed bottom-24 left-6 z-[100] pointer-events-auto">
         <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="block animate-float">
