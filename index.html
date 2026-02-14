@@ -13,21 +13,35 @@
         body { font-family: 'Montserrat', sans-serif; }
         .promo-bar { background-color: #000; color: #fff; font-size: 11px; padding: 6px 0; text-align: center; text-transform: uppercase; letter-spacing: 2px; }
         .cart-sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Imagens Arredondadas e Efeito Flutuante */
         .product-img { transition: transform 0.5s ease; border-radius: 1.5rem; }
         .product-card { transition: all 0.3s ease; }
         .product-card:hover { transform: translateY(-10px); }
         .product-card:hover .product-img { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        
         .min-order-alert { font-size: 10px; font-weight: bold; text-transform: uppercase; }
         #main-carousel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; }
         #main-carousel img.active { opacity: 1; }
         .attr-select { background: white; border: 1px solid #ddd; font-size: 9px; padding: 4px; margin-bottom: 4px; text-transform: uppercase; font-weight: bold; width: 100%; cursor: pointer; border-radius: 4px; }
+        
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
         .animate-float { animation: float 3s ease-in-out infinite; }
         @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 5px rgba(219, 39, 119, 0.4); opacity: 1; } 50% { box-shadow: 0 0 25px rgba(219, 39, 119, 0.8); opacity: 0.8; } }
         .animate-pulse-glow { animation: pulse-glow 2s infinite; }
-        .card-3d { background: #fff; padding: 6px; border-radius: 6px; box-shadow: 0 3px 0px #d1d5db; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; cursor: pointer; }
+
+        /* Estilo dos Mini Cartões 3D no Rodapé */
+        .card-3d {
+            background: #fff;
+            padding: 6px;
+            border-radius: 6px;
+            box-shadow: 0 3px 0px #d1d5db;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+        }
         .card-3d:hover { transform: translateY(-2px); box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; }
-        .card-3d.active { box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; background: #fff5f7; }
     </style>
 </head>
 <body class="bg-white">
@@ -38,6 +52,7 @@
             <div class="text-2xl font-bold tracking-tighter text-black uppercase">
                 Miquely<span class="font-light text-pink-600">Modas</span>
             </div>
+            
             <div class="flex items-center gap-5">
                 <div class="relative cursor-pointer" onclick="toggleCart()">
                     <i class="fa-solid fa-bag-shopping text-2xl"></i>
@@ -54,16 +69,15 @@
         </a>
     </section>
 
-    <div class="promo-bar font-bold">ATACADO - Pedido Mínimo: R$ 800,00</div>
+    <div class="promo-bar font-bold">ATACADO - Pedido Mínimo: R$ 700,00</div>
 
-    <main class="container mx-auto px-4 py-12 pb-32"> 
-        <h3 class="text-center text-xl font-bold mb-10 uppercase tracking-[0.3em] text-gray-800">Catálogo Disponível</h3>
+    <main class="container mx-auto px-4 py-12 pb-32"> <h3 class="text-center text-xl font-bold mb-10 uppercase tracking-[0.3em] text-gray-800">Catálogo Disponível</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8" id="product-list"></div>
     </main>
 
     <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[100] translate-x-full cart-sidebar flex flex-col">
         <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-            <h2 class="font-bold uppercase tracking-widest text-sm text-pink-600">Pedido de Atacado</h2>
+            <h2 class="font-bold uppercase tracking-widest text-sm text-pink-600 text-3d">Pedido de Atacado</h2>
             <button onclick="toggleCart()" class="text-2xl">&times;</button>
         </div>
         <div id="cart-content" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
@@ -73,12 +87,13 @@
                 <span id="cart-total">R$ 0,00</span>
             </div>
             <div id="min-order-msg" class="p-3 text-center mb-4 min-order-alert text-red-600"></div>
+            
             <div class="bg-gray-50 text-center rounded-2xl overflow-hidden border shadow-inner">
                 <button id="btn-checkout-appmax" onclick="openPaymentModal()" class="w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
-                    Finalizar Compra Segura
+                    Pagar com Google Pay / Pix / Cartão
                 </button>
                 <p class="text-[9px] py-2 text-gray-500 uppercase font-bold tracking-tighter">
-                    Processado com segurança por <strong>Pix API</strong>
+                    Processado com segurança por <strong>Appmax API</strong>.
                 </p>
             </div>
         </div>
@@ -91,25 +106,30 @@
                 <button onclick="closePaymentModal()" class="text-2xl text-gray-400 hover:text-black">&times;</button>
             </div>
             
-            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div class="p-6 space-y-4">
                 <div class="space-y-3">
-                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
+                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
-                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
-                        <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
+                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none transition-all text-sm">
                     </div>
                 </div>
 
-               
+                <div class="border-t pt-4">
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-center">Métodos de Pagamento</p>
+                    <div class="flex justify-center gap-4">
+                        <div class="card-3d"><i class="fa-brands fa-cc-visa text-xl text-blue-800"></i></div>
+                        <div class="card-3d"><i class="fa-brands fa-cc-mastercard text-xl text-red-500"></i></div>
+                        <div class="card-3d"><i class="fa-solid fa-barcode text-xl text-gray-700"></i></div>
+                        <div class="card-3d"><i class="fa-brands fa-pix text-xl text-teal-500"></i></div>
+                    </div>
+                </div>
+            </div>
 
             <div class="p-6 bg-gray-50 border-t">
                 <button onclick="confirmarDadosAppmax()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
-                    Confirmar e Finalizar
+                    Confirmar e Ir para Pagamento
                 </button>
             </div>
         </div>
@@ -121,7 +141,18 @@
         </a>
     </div>
 
-   
+    <footer class="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-md border-t py-3 z-[150]">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="card-3d" title="Pix"><i class="fa-brands fa-pix text-teal-500 text-sm"></i></div>
+                <div class="card-3d" title="Visa"><i class="fa-brands fa-cc-visa text-blue-800 text-sm"></i></div>
+                <div class="card-3d" title="Mastercard"><i class="fa-brands fa-cc-mastercard text-red-500 text-sm"></i></div>
+                <div class="card-3d" title="Boleto"><i class="fa-solid fa-barcode text-gray-700 text-sm"></i></div>
+                <div class="card-3d bg-green-50 border-green-200">
+                    <i class="fa-solid fa-shield-check text-green-600 text-xs"></i>
+                    <span class="text-[8px] font-bold text-green-700 ml-1">SEGURO</span>
+                </div>
+            </div>
             <div class="text-right">
                 <div class="text-[12px] font-bold tracking-tighter text-black uppercase">
                     Miquely<span class="text-pink-600">Modas</span>
@@ -130,7 +161,13 @@
             </div>
         </div>
     </footer>
+
     <script>
+        const MARGEM_LUCRO = 1.50; 
+        const MIN_ORDER = 700;
+        let cart = [];
+        let customerData = {}; 
+
         function initProducts() {
             const list = document.getElementById('product-list');
             list.innerHTML = '';
@@ -305,168 +342,125 @@
             const p57Base = 19.78;
             const p57Calc = p57Base * MARGEM_LUCRO;
             list.innerHTML += generateHTML('Calcinha Fio D Delicotton', p57Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230818144857_whatsappimage20230818at140055_e.jpeg', 'manual-57');
-           
-        }                          
+            });
+        }
 
-   <script>
-        const MARGEM_LUCRO = 1.50; 
-        const MIN_ORDER = 800;        
-        let cart = [];
-        let customerData = {}; 
-        let selectedMethod = 'pix';            
-    // --- 1. CONFIGURAÇÕES GLOBAIS ---
-    const CHAVE_PIX = "47149826000180"; // Seu CNPJ
-    let customerData = {};
-
-    function generateHTML(name, price, img, id) {
-        return `
-        <div class="product-card group">
-            <div class="relative overflow-hidden bg-gray-50 aspect-[3/4] rounded-3xl shadow-md border border-gray-100">
-                <img src="${img}" class="product-img w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/400x600?text=Miquely+Modas'">
-                <div class="absolute bottom-0 w-full p-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1 bg-black/20 backdrop-blur-sm">
-                    <select id="color-${id}" class="attr-select"><option>Preto</option><option>Branco</option><option>Rosa</option></select>
-                    <select id="size-${id}" class="attr-select"><option>P</option><option>M</option><option>G</option><option>GG</option></select>
-                    <button onclick="addWithAttrs('${name}', ${price}, '${img}', '${id}')" class="w-full bg-black text-white py-3 text-[10px] font-bold uppercase rounded-lg">Adicionar</button>
+        function generateHTML(name, price, img, id) {
+            return `
+            <div class="product-card group">
+                <div class="relative overflow-hidden bg-gray-50 aspect-[3/4] rounded-3xl shadow-md border border-gray-100">
+                    <img src="${img}" class="product-img w-full h-full object-cover">
+                    <div class="absolute bottom-0 w-full p-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1 bg-black/20 backdrop-blur-sm">
+                        <select id="color-${id}" class="attr-select"><option>Preto</option><option>Branco</option><option>Rosa</option></select>
+                        <select id="size-${id}" class="attr-select"><option>P</option><option>M</option><option>G</option><option>GG</option></select>
+                        <button onclick="addWithAttrs('${name}', ${price}, '${img}', '${id}')" class="w-full bg-black text-white py-3 text-[10px] font-bold uppercase rounded-lg">Adicionar</button>
+                    </div>
                 </div>
-            </div>
-            <div class="mt-4 text-center px-2">
-                <h4 class="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">${name}</h4>
-                <p class="font-bold text-base mt-1 text-black">R$ ${price.toFixed(2).replace('.',',')}</p>
-            </div>
-        </div>`;
-    }
-
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
-
-    function openPaymentModal() { 
-        document.getElementById('payment-modal').classList.remove('hidden'); 
-        selectMethod('pix');
-    }
-    
-    function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
-    
-    function selectMethod(method) {
-        selectedMethod = method;
-        document.querySelectorAll('.card-3d').forEach(el => el.classList.remove('active'));
-        const el = document.getElementById(`method-${method}`);
-        if(el) el.classList.add('active');
-        document.getElementById('card-fields').classList.toggle('hidden', method !== 'card');
-    }
-
-    // --- FUNÇÃO DE FINALIZAÇÃO DIRETA (PIX + WHATSAPP) ---
-    function confirmarDados() {
-        const name = document.getElementById('cust-name').value;
-        const phone = document.getElementById('cust-phone').value;
-        const email = document.getElementById('cust-email').value;
-
-        if(!name || !phone || !email) { alert("Preencha Nome, Telefone e E-mail."); return; }
-
-        const totalFloat = cart.reduce((sum, item) => sum + item.price, 0);
-        const valorExibicao = totalFloat.toFixed(2);
-        
-        // Geração do Payload PIX Estático (Copia e Cola)
-        const payloadPix = `00020101021226580014br.gov.bcb.pix0114${CHAVE_PIX}52040000530398654${valorExibicao.length.toString().padStart(2, '0')}${valorExibicao}5802BR5913MIQUELYMODAS6008BRASILIA62070503***6304`;
-
-        // Troca o conteúdo do Modal para exibir o PIX
-        const modalContent = document.querySelector('#payment-modal .max-w-md');
-        modalContent.innerHTML = `
-            <div class="bg-white p-8 rounded-3xl text-center shadow-2xl border-4 border-pink-100">
-                <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fa-solid fa-check text-2xl"></i>
-                </div>
-                <h2 class="text-xl font-bold uppercase mb-2">Pedido Quase Pronto!</h2>
-                <p class="text-[11px] text-gray-500 mb-6 font-bold uppercase">Copie o código PIX abaixo para pagar:</p>
-                
-                <textarea id="pixCode" readonly class="w-full text-[10px] p-4 bg-gray-50 border-2 border-dashed rounded-2xl h-24 mb-4 font-mono text-gray-600">${payloadPix}</textarea>
-                
-                <button onclick="copyPix()" class="w-full bg-black text-white py-4 rounded-2xl font-bold text-[12px] mb-4 uppercase hover:scale-95 transition-transform">
-                    <i class="fa-solid fa-copy mr-2"></i> Copiar Código PIX
-                </button>
-
-                <button onclick="enviarWhatsApp('${valorExibicao}')" class="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold uppercase text-[12px] shadow-lg flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-whatsapp text-xl"></i> Já paguei! Enviar Comprovante
-                </button>
-                
-                <button onclick="location.reload()" class="mt-4 text-[10px] text-gray-400 font-bold uppercase underline">Cancelar e Voltar</button>
-            </div>
-        `;
-    }
-
-    function copyPix() {
-        const copyText = document.getElementById("pixCode");
-        copyText.select();
-        navigator.clipboard.writeText(copyText.value);
-        alert("Código PIX copiado! Agora abra seu banco e pague.");
-    }
-
-    function enviarWhatsApp(total) {
-        const fone = "5561983446343";
-        const nome = document.getElementById('cust-name').value;
-        let msg = `*NOVO PEDIDO - MIQUELY MODAS*\n`;
-        msg += `*Cliente:* ${nome}\n`;
-        msg += `*Total:* R$ ${total}\n`;
-        msg += `------------------------------\n`;
-        cart.forEach(item => msg += `• ${item.name}\n`);
-        msg += `------------------------------\n`;
-        msg += `_Estou enviando o comprovante do PIX em anexo._`;
-        
-        window.open(`https://api.whatsapp.com/send?phone=${fone}&text=${encodeURIComponent(msg)}`);
-    }
-
-    function addWithAttrs(name, price, img, id) {
-        const color = document.getElementById(`color-${id}`).value;
-        const size = document.getElementById(`size-${id}`).value;
-        cart.push({name: `${name} (${color}/${size})`, price, img});
-        updateCart();
-        toggleCart();
-    }
-
-    function updateCart() {
-        const content = document.getElementById('cart-content');
-        const totalEl = document.getElementById('cart-total');
-        const msg = document.getElementById('min-order-msg');
-        const btn = document.getElementById('btn-checkout-appmax');
-        let total = 0;
-        
-        content.innerHTML = cart.length ? '' : '<p class="text-center py-10 text-[10px] uppercase font-bold text-gray-400 tracking-widest">Sua sacola está vazia</p>';
-        
-        cart.forEach((item, i) => {
-            total += item.price;
-            content.innerHTML += `
-            <div class="flex gap-4 border-b pb-3 items-center">
-                <img src="${item.img}" class="w-12 h-16 object-cover rounded-xl shadow-md" onerror="this.src='https://via.placeholder.com/150'">
-                <div class="flex-1">
-                    <p class="text-[9px] font-bold uppercase text-gray-800">${item.name}</p>
-                    <p class="text-pink-600 font-bold text-sm">R$ ${item.price.toFixed(2)}</p>
+                <div class="mt-4 text-center px-2">
+                    <h4 class="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">${name}</h4>
+                    <p class="font-bold text-base mt-1 text-black">R$ ${price.toFixed(2).replace('.',',')}</p>
                 </div>
             </div>`;
-        });
-        
-        totalEl.innerText = `R$ ${total.toFixed(2)}`;
-        document.getElementById('cart-count').innerText = cart.length;
-
-        if(total >= MIN_ORDER) {
-            msg.innerText = "✓ Pedido Mínimo Atingido"; 
-            msg.className = "text-green-600 p-3 text-center font-bold uppercase text-[10px]";
-            btn.disabled = false; btn.className = "w-full bg-black text-white py-4 font-bold uppercase text-[12px] shadow-xl rounded-2xl";
-        } else {
-            msg.innerText = `Faltam R$ ${(MIN_ORDER - total).toFixed(2)} para o atacado`; 
-            msg.className = "text-red-600 p-3 text-center font-bold uppercase text-[10px]";
-            btn.disabled = true; btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[12px] cursor-not-allowed rounded-2xl";
         }
-    }
 
-    // Carrossel
-    const slides = document.querySelectorAll('#main-carousel img');
-    let cur = 0;
-    if(slides.length > 0) {
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
+
+        function openPaymentModal() { document.getElementById('payment-modal').classList.remove('hidden'); }
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+        
+        function confirmarDadosAppmax() {
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            const cpf = document.getElementById('cust-cpf').value;
+            if(!name || !email || !cpf) { alert("Preencha todos os campos para continuar."); return; }
+            customerData = { name, email, cpf, phone: document.getElementById('cust-phone').value };
+            closePaymentModal();
+            finalizarPagamentoAppmax();
+        }
+
+        function addWithAttrs(name, price, img, id) {
+            const color = document.getElementById(`color-${id}`).value;
+            const size = document.getElementById(`size-${id}`).value;
+            cart.push({name: `${name} (${color}/${size})`, price, img});
+            updateCart();
+            toggleCart();
+        }
+
+        function updateCart() {
+            const content = document.getElementById('cart-content');
+            const totalEl = document.getElementById('cart-total');
+            const msg = document.getElementById('min-order-msg');
+            const btn = document.getElementById('btn-checkout-appmax');
+            let total = 0;
+            content.innerHTML = cart.length ? '' : '<p class="text-center py-10 text-[10px] uppercase font-bold text-gray-400 tracking-widest">Sua sacola está vazia</p>';
+            
+            cart.forEach((item, i) => {
+                total += item.price;
+                content.innerHTML += `
+                <div class="flex gap-4 border-b pb-3 items-center group">
+                    <img src="${item.img}" class="w-12 h-16 object-cover rounded-xl shadow-md border border-gray-100">
+                    <div class="flex-1">
+                        <p class="text-[9px] font-bold uppercase tracking-tighter text-gray-800">${item.name}</p>
+                        <p class="text-pink-600 font-bold text-sm">R$ ${item.price.toFixed(2)}</p>
+                    </div>
+                </div>`;
+            });
+            
+            totalEl.innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('cart-count').innerText = cart.length;
+            if(total >= MIN_ORDER) {
+                msg.innerText = "✓ Pedido Mínimo Atingido"; msg.className = "text-green-600 p-3 text-center font-bold uppercase text-[10px]";
+                btn.disabled = false; btn.className = "w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all rounded-2xl";
+            } else {
+                msg.innerText = `Faltam R$ ${(MIN_ORDER - total).toFixed(2)} para o atacado`; msg.className = "text-red-600 p-3 text-center font-bold uppercase text-[10px]";
+                btn.disabled = true; btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[12px] cursor-not-allowed rounded-2xl";
+            }
+        }
+
+        async function finalizarPagamentoAppmax() {
+            const btn = document.getElementById('btn-checkout-appmax');
+            const originalText = btn.innerText;
+            btn.innerText = "GERANDO CHECKOUT SEGURO...";
+            btn.disabled = true;
+
+            try {
+                const totalRaw = document.getElementById('cart-total').innerText;
+                const totalNum = parseFloat(totalRaw.replace('R$ ', '').replace('.', '').replace(',', '.'));
+                const payload = {
+                    total: totalNum,
+                    customer: customerData,
+                    products: cart.map(item => ({ name: item.name, qty: 1, price: item.price }))
+                };
+                
+                const response = await fetch(awsEndpoint, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const textData = await response.text();
+                let result;
+                try { result = JSON.parse(textData); } catch (e) { throw new Error("Erro na resposta"); }
+                if (result.url) { window.location.href = result.url; } 
+                else { alert("Erro Appmax: " + (result.error || "Dados inválidos")); }
+            } catch (error) {
+                alert("Erro na conexão segura. Tente novamente.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        }
+
+
+        const slides = document.querySelectorAll('#main-carousel img');
+        let cur = 0;
         setInterval(() => {
             slides[cur].classList.remove('active');
             cur = (cur + 1) % slides.length;
             slides[cur].classList.add('active');
         }, 4500);
-    }
-</script>
-</body>
 
+        initProducts();
+    </script>
+</body>
 </html>
