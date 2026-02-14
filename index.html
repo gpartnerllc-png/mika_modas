@@ -54,7 +54,7 @@
         </a>
     </section>
 
-    <div class="promo-bar font-bold">ATACADO - Pedido Mínimo: R$ 700,00</div>
+    <div class="promo-bar font-bold">ATACADO - Pedido Mínimo: R$ 800,00</div>
 
     <main class="container mx-auto px-4 py-12 pb-32"> 
         <h3 class="text-center text-xl font-bold mb-10 uppercase tracking-[0.3em] text-gray-800">Catálogo Disponível</h3>
@@ -179,7 +179,7 @@
 
     <script>
         const MARGEM_LUCRO = 1.50; 
-        const MIN_ORDER = 700;
+        const MIN_ORDER = 800;
         let cart = [];
         let customerData = {}; 
         let selectedMethod = 'pix';
@@ -249,9 +249,9 @@
             const p20Base = 115.47;
             const p20Calc = p20Base * MARGEM_LUCRO;
             list.innerHTML += generateHTML('Camisola Longa de Seda', p20Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/23/20250820174928_intuicao3_57_e.jpg', 'manual-20');
-            const p21Base = 60.86;
+            const p21Base = 76.86;
             const p21Calc = p21Base * MARGEM_LUCRO;
-            list.innerHTML += generateHTML('Conjunto Perola Encanto', p21Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/1/20251218144817_intuicaodez25_31_e.jpg', 'manual-21');
+            list.innerHTML += generateHTML('Body Manga Encanto', p21Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/15/20250826110313_whatsappimage20250825at170250_e.jpg', 'manual-21');
             const p22Base = 41.96;
             const p22Calc = p22Base * MARGEM_LUCRO;
             list.innerHTML += generateHTML('Blusa M.longa Tule', p22Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/24/20231206122501_img_7426_e.jpg', 'manual-22');
@@ -357,6 +357,9 @@
             const p56Base = 19.77;
             const p56Calc = p56Base * MARGEM_LUCRO;
             list.innerHTML += generateHTML('Calcinha Cos Largo Fio', p56Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230815143028_whatsappimage20230815at142018_e.jpeg', 'manual-56');
+            const p57Base = 19.78;
+            const p57Calc = p57Base * MARGEM_LUCRO;
+            list.innerHTML += generateHTML('Calcinha Fio D Delicotton', p57Calc, 'https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/colecoes/19/20230818144857_whatsappimage20230818at140055_e.jpeg', 'manual-57');
             
             extraImages.forEach((url, i) => {
                 const precoBase = 115.00; 
