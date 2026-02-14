@@ -373,120 +373,187 @@
        
 
     <script>
-        // 1. Configurações Fixas
-const CHAVE_PIX = "47149826000180"; // Seu CNPJ
-const NOME_RECEBEDOR = "MIQUELY MODAS";
-const CIDADE_RECEBEDOR = "BRASILIA";
-
-// 2. Função Principal de Checkout
-async function finalizarPagamento() {
-    // Captura de Dados
-    const name = document.getElementById('cust-name').value;
-    const email = document.getElementById('cust-email').value;
-    const phone = document.getElementById('cust-phone').value;
-    const cpf = document.getElementById('cust-cpf').value;
-    const consent = document.getElementById('lgpd-consent').checked;
-
-    // Validações
-    if (!name || !email || !cpf) { 
-        alert("Preencha os campos obrigatórios."); 
-        return; 
-    }
-    if (!consent) { 
-        alert("Você precisa aceitar os termos da LGPD."); 
-        return; 
-    }
-
-    // Trava para não gerar dois Pix na mesma tela
-    if (document.getElementById('pixCode')) {
-        alert("O seu código Pix já foi gerado logo abaixo!");
-        return;
-    }
-
-    const btnCheckout = document.querySelector('#payment-modal button');
-    const originalText = btnCheckout.innerText;
-    
-    btnCheckout.innerText = "GERANDO PIX...";
-    btnCheckout.disabled = true;
-
-    try {
-        // Cálculo de Valores
-        const totalFloat = cart.reduce((sum, item) => sum + item.price, 0);
-        const valorExibicao = totalFloat.toFixed(2);
-        const lenValor = valorExibicao.length.toString().padStart(2, '0');
-
-        // Gerar o Payload PIX (Padrão EMV)
-        const payloadPix = `00020101021226580014br.gov.bcb.pix0114${CHAVE_PIX}52040000530398654${lenValor}${valorExibicao}5802BR5913${NOME_RECEBEDOR.replace(/\s/g, '')}6008${CIDADE_RECEBEDOR}62070503***6304`;
-
-        // Sincroniza Lead (Opcional)
-        if (typeof syncLead === "function") {
-            syncLead().catch(() => console.log("Lead offline"));
+        function generateHTML(name, price, img, id) {
+            return `
+            <div class="product-card group">
+                <div class="relative overflow-hidden bg-gray-50 aspect-[3/4] rounded-3xl shadow-md border border-gray-100">
+                    <img src="${img}" class="product-img w-full h-full object-cover">
+                    <div class="absolute bottom-0 w-full p-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-1 bg-black/20 backdrop-blur-sm">
+                        <select id="color-${id}" class="attr-select"><option>Preto</option><option>Branco</option><option>Rosa</option></select>
+                        <select id="size-${id}" class="attr-select"><option>P</option><option>M</option><option>G</option><option>GG</option></select>
+                        <button onclick="addWithAttrs('${name}', ${price}, '${img}', '${id}')" class="w-full bg-black text-white py-3 text-[10px] font-bold uppercase rounded-lg">Adicionar</button>
+                    </div>
+                </div>
+                <div class="mt-4 text-center px-2">
+                    <h4 class="text-[10px] text-gray-400 uppercase font-bold tracking-tighter">${name}</h4>
+                    <p class="font-bold text-base mt-1 text-black">R$ ${price.toFixed(2).replace('.',',')}</p>
+                </div>
+            </div>`;
         }
 
-        // Interface: Inserir sem apagar nada (insertAdjacentHTML)
-        const btnArea = document.querySelector('#payment-modal .space-y-3');
+        function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
+
+        function openPaymentModal() { 
+            document.getElementById('payment-modal').classList.remove('hidden'); 
+            selectMethod('pix');
+        }
         
-        // Esconde o botão original para o Pix aparecer no lugar
-        btnCheckout.style.display = 'none';
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+        
+        function selectMethod(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.card-3d').forEach(el => el.classList.remove('active'));
+            const el = document.getElementById(`method-${method}`);
+            if(el) el.classList.add('active');
+            document.getElementById('card-fields').classList.toggle('hidden', method !== 'card');
+        }
 
-        const pixHTML = `
-            <div id="pix-result-container" class="mt-4 border-t pt-4">
-                <div class="bg-gray-50 p-4 rounded-2xl border-2 border-dashed border-green-500 shadow-inner">
-                    <p class="text-[11px] font-bold text-center text-green-600 mb-2 uppercase">✅ PIX Gerado com Sucesso!</p>
-                    <div class="relative">
-                        <textarea id="pixCode" readonly class="w-full text-[10px] p-3 bg-white border rounded-lg h-24 mb-2 font-mono text-gray-600 focus:outline-none">${payloadPix}</textarea>
+        // --- TECNOLOGIA DE CAPTURA DE LEAD (LGPD) ---
+        async function syncLead() {
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            if(!email.includes('@')) return;
+
+            const payload = {
+                action: 'create_customer',
+                consent: document.getElementById('lgpd-consent').checked,
+                firstname: name.split(' ')[0],
+                lastname: name.split(' ').slice(1).join(' '),
+                email: email,
+                telephone: document.getElementById('cust-phone').value,
+                postcode: document.getElementById('cust-cep').value,
+                custom_txt: "Lead Atacado via Modal",
+                products: cart.map(item => ({ product_sku: item.name, product_qty: 1 }))
+            };
+
+            try {
+                await fetch(awsEndpoint, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) { console.warn("Lead sync offline"); }
+        }
+
+        async function confirmarDadosAppmax() {
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            const cpf = document.getElementById('cust-cpf').value;
+            const consent = document.getElementById('lgpd-consent').checked;
+
+            if(!name || !email || !cpf) { alert("Preencha os campos obrigatórios."); return; }
+            if(!consent) { alert("Você precisa aceitar os termos da LGPD."); return; }
+            
+            customerData = { 
+                name, email, cpf, 
+                phone: document.getElementById('cust-phone').value,
+                method: selectedMethod
+            };
+
+            if(selectedMethod === 'card') {
+                customerData.card = {
+                    number: document.getElementById('card-number').value,
+                    month: document.getElementById('card-month').value,
+                    year: document.getElementById('card-year').value,
+                    cvv: document.getElementById('card-cvv').value,
+                    installments: document.getElementById('card-installments').value
+                };
+            }
+
+            finalizarPagamentoAppmax();
+        }
+
+        function addWithAttrs(name, price, img, id) {
+            const color = document.getElementById(`color-${id}`).value;
+            const size = document.getElementById(`size-${id}`).value;
+            cart.push({name: `${name} (${color}/${size})`, price, img});
+            updateCart();
+            toggleCart();
+        }
+
+        function updateCart() {
+            const content = document.getElementById('cart-content');
+            const totalEl = document.getElementById('cart-total');
+            const msg = document.getElementById('min-order-msg');
+            const btn = document.getElementById('btn-checkout-appmax');
+            let total = 0;
+            content.innerHTML = cart.length ? '' : '<p class="text-center py-10 text-[10px] uppercase font-bold text-gray-400 tracking-widest">Sua sacola está vazia</p>';
+            
+            cart.forEach((item, i) => {
+                total += item.price;
+                content.innerHTML += `
+                <div class="flex gap-4 border-b pb-3 items-center group">
+                    <img src="${item.img}" class="w-12 h-16 object-cover rounded-xl shadow-md border border-gray-100">
+                    <div class="flex-1">
+                        <p class="text-[9px] font-bold uppercase tracking-tighter text-gray-800">${item.name}</p>
+                        <p class="text-pink-600 font-bold text-sm">R$ ${item.price.toFixed(2)}</p>
                     </div>
-                    <button onclick="copyPix()" class="w-full bg-black text-white py-4 rounded-xl font-bold text-[12px] mb-2 uppercase active:scale-95 transition-all shadow-md">
-                        <i class="fa-solid fa-copy"></i> Copiar Código PIX
-                    </button>
-                </div>
-                
-                <div class="py-3">
-                    <button onclick="enviarWhatsAppConfirmado('${valorExibicao}')" class="w-full bg-[#25D366] text-white py-5 rounded-2xl font-bold uppercase text-[13px] shadow-xl flex items-center justify-center gap-2 hover:brightness-90 transition-all">
-                        <i class="fa-brands fa-whatsapp text-2xl"></i> Já paguei! Enviar Pedido
-                    </button>
-                </div>
-                <p class="text-[9px] text-center text-gray-400">Pague no seu banco e clique no botão verde para confirmar.</p>
-            </div>
-        `;
+                </div>`;
+            });
+            
+            totalEl.innerText = `R$ ${total.toFixed(2)}`;
+            document.getElementById('cart-count').innerText = cart.length;
+            if(total >= MIN_ORDER) {
+                msg.innerText = "✓ Pedido Mínimo Atingido"; msg.className = "text-green-600 p-3 text-center font-bold uppercase text-[10px]";
+                btn.disabled = false; btn.className = "w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all rounded-2xl";
+            } else {
+                msg.innerText = `Faltam R$ ${(MIN_ORDER - total).toFixed(2)} para o atacado`; msg.className = "text-red-600 p-3 text-center font-bold uppercase text-[10px]";
+                btn.disabled = true; btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[12px] cursor-not-allowed rounded-2xl";
+            }
+        }
 
-        // O SEGREDO: 'beforeend' adiciona ao final sem apagar as imagens que já estão na div
-        btnArea.insertAdjacentHTML('beforeend', pixHTML);
+        async function finalizarPagamentoAppmax() {
+            const btnCheckout = document.querySelector('#payment-modal button');
+            const originalText = btnCheckout.innerText;
+            btnCheckout.innerText = "PROCESSANDO...";
+            btnCheckout.disabled = true;
 
-    } catch (error) {
-        console.error(error);
-        alert("Erro ao processar checkout.");
-        btnCheckout.style.display = 'block'; 
-    } finally {
-        btnCheckout.innerText = originalText;
-        btnCheckout.disabled = false;
-    }
-}
+            try {
+                const payload = {
+                    action: 'checkout', // Identificador para a Lambda
+                    consent: true,
+                    method: selectedMethod,
+                    customer: {
+                        name: customerData.name,
+                        email: customerData.email,
+                        cpf: customerData.cpf,
+                        phone: customerData.phone
+                    },
+                    products: cart.map(item => ({ name: item.name, qty: 1, price: item.price })),
+                    payment: customerData.card || {}
+                };
 
-// 3. Funções Auxiliares
-function copyPix() {
-    const copyText = document.getElementById("pixCode");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(copyText.value).then(() => {
-        alert("Código PIX copiado! Cole no seu banco.");
-    });
-}
+                const response = await fetch(awsEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-function enviarWhatsAppConfirmado(total) {
-    const fone = "5561983446343";
-    const nomeCliente = document.getElementById('cust-name').value;
-    
-    let msg = `*COMPROVANTE DE PEDIDO - MIQUELY MODAS*\n`;
-    msg += `*Cliente:* ${nomeCliente}\n`;
-    msg += `------------------------------\n`;
-    cart.forEach(item => msg += `• ${item.name} - R$ ${item.price.toFixed(2)}\n`);
-    msg += `------------------------------\n`;
-    msg += `*TOTAL PAGO: R$ ${total}*\n\n`;
-    msg += `_Estou enviando o comprovante em anexo._`;
-    
-    window.open(`https://api.whatsapp.com/send?phone=${fone}&text=${encodeURIComponent(msg)}`);
-}
+                const result = await response.json();
+
+                if (result.success && result.response.data) {
+                    const data = result.response.data;
+                    alert("Pedido Criado com Sucesso!");
+                    if (data.checkout_url) window.location.href = data.checkout_url;
+                } else {
+                    alert("Erro: " + (result.response.message || "Tente novamente"));
+                }
+            } catch (error) {
+                alert("Erro técnico na conexão. Tente novamente mais tarde.");
+            } finally {
+                btnCheckout.innerText = originalText;
+                btnCheckout.disabled = false;
+            }
+        }
+
+        const slides = document.querySelectorAll('#main-carousel img');
+        let cur = 0;
+        setInterval(() => {
+            slides[cur].classList.remove('active');
+            cur = (cur + 1) % slides.length;
+            slides[cur].classList.add('active');
+        }, 4500);
+
+        initProducts();
     </script>
                 <body></body>
 <html></html>
