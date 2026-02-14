@@ -28,6 +28,52 @@
         .card-3d { background: #fff; padding: 6px; border-radius: 6px; box-shadow: 0 3px 0px #d1d5db; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; cursor: pointer; }
         .card-3d:hover { transform: translateY(-2px); box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; }
         .card-3d.active { box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; background: #fff5f7; }
+
+        /* Efeito 3D nos Inputs */
+.input-3d {
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8f0;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+}
+
+.input-3d:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-color: #ec4899; /* Rosa Miquely */
+}
+
+/* Animação de Entrada do Pix */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-pix {
+    animation: slideUp 0.5s ease-out forwards;
+}
+
+/* Botão Estilo Glassmorphism */
+.btn-pix {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-pix::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg);
+    transition: 0.5s;
+}
+
+.btn-pix:hover::after {
+    left: 120%;
+}
     </style>
 </head>
 <body class="bg-white">
