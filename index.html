@@ -432,12 +432,7 @@
                     products: cart.map(item => ({ name: item.name, qty: 1, price: item.price }))
                 };
                 
-                const response = await fetch(awsEndpoint, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            
                 const textData = await response.text();
                 let result;
                 try { result = JSON.parse(textData); } catch (e) { throw new Error("Erro na resposta"); }
