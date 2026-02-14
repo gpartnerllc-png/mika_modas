@@ -278,7 +278,7 @@
                     customer: customerData,
                     products: cart.map(item => ({ name: item.name, qty: 1, price: item.price }))
                 };
-                const awsEndpoint = 'https://org3zgdxvga5sb377l7yjgyfuu0wmapq.lambda-url.sa-east-1.on.aws/';
+               
                 const response = await fetch(awsEndpoint, {
                     method: 'POST',
                     mode: 'cors',
@@ -297,14 +297,7 @@
                 btn.disabled = false;
             }
         }
-const response = await fetch('https://org3zgdxvga5sb377l7yjgyfuu0wmapq.lambda-url.sa-east-1.on.aws/', {
-    method: 'POST',
-    body: JSON.stringify({
-        action: 'refund',
-        order_id: 345678,
-        refund_type: 'total'
-    })
-});
+
 
         const slides = document.querySelectorAll('#main-carousel img');
         let cur = 0;
