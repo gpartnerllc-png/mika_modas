@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atacado | Miquely Modas Lingerie</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/jpeg" href="https://novidadesnaloja.moda/clientes/47149826000180_20240122230901.jpeg">
 
@@ -318,10 +319,10 @@
     <div id="checkout-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden fade-in">
             <div class="p-6 border-b flex justify-between items-center bg-gray-50">
-                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-sm">Dados do Pedido</h3>
+                <h3 id="checkout-titulo" class="font-bold uppercase tracking-widest text-gray-800 text-sm">Dados do Pedido</h3>
                 <button onclick="fecharCheckout()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
             </div>
-            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+            <div id="checkout-form" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
                 <div class="space-y-3">
                     <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
                     <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
@@ -366,15 +367,48 @@
                             <span id="res-total" class="text-pink-600 font-extrabold text-xl">R$ 0,00</span>
                         </div>
                     </div>
-                    <p class="text-[8px] text-gray-400 font-bold uppercase tracking-wider text-center mt-3">
-                        <i class="fa-solid fa-shield-halved text-green-500 mr-1"></i>
-                        Você será redirecionado para o checkout seguro da InfinitePay
+                    <p id="checkout-info" class="text-[8px] text-gray-400 font-bold uppercase tracking-wider text-center mt-3">
+                        <i class="fa-solid fa-qrcode text-teal-500 mr-1"></i>
+                        Pague direto com QR Code Pix — sem sair da loja
                     </p>
                 </div>
+            </div>
+
+            <!-- PIX DIRETO: QR Code com a chave pago@droppfy.com -->
+            <div id="pix-panel" class="hidden p-6 space-y-4 max-h-[70vh] overflow-y-auto text-center">
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-4">
+                    <p class="text-[10px] font-extrabold uppercase tracking-widest text-gray-400">Escaneie o QR Code no app do seu banco</p>
+                    <div id="pix-qr" class="mx-auto w-fit bg-white p-3 rounded-2xl shadow-inner mt-3"></div>
+                    <p class="text-[8px] font-bold uppercase tracking-wider text-gray-400 mt-3 animate-pulse">Aguardando pagamento…</p>
+                </div>
+                <div class="bg-pink-50/60 border border-pink-100 rounded-2xl p-4 space-y-2 text-left">
+                    <div class="flex justify-between text-[10px] font-bold uppercase text-gray-500">
+                        <span>Total Pix (5% OFF)</span><span id="pix-valor" class="text-pink-600 font-extrabold text-base">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold uppercase text-gray-500 gap-3">
+                        <span>Chave Pix</span><span id="pix-chave" class="text-gray-800">pago@droppfy.com</span>
+                    </div>
+                    <div class="flex justify-between text-[10px] font-bold uppercase text-gray-500">
+                        <span>NSU do pedido</span><span id="pix-nsu" class="text-gray-800">—</span>
+                    </div>
+                </div>
+                <button onclick="copiarPix()" class="w-full border-2 border-pink-200 text-pink-600 py-3.5 rounded-2xl font-bold uppercase tracking-widest text-[10px] hover:bg-pink-50 transition-all">
+                    <i class="fa-regular fa-copy mr-2"></i>Copiar código Pix (copia e cola)
+                </button>
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider leading-relaxed">
+                    <i class="fa-solid fa-circle-info text-pink-400 mr-1"></i>
+                    Após pagar, envie o comprovante no WhatsApp para confirmarmos seu pedido.
+                </p>
             </div>
             <div class="p-6 bg-gray-50 border-t">
                 <button id="btn-finalizar" onclick="finalizarCheckout()" class="w-full bg-pink-600 text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
                     Gerar Pagamento Seguro
+                </button>
+                <a id="btn-comprovante" target="_blank" class="hidden btn-pink w-full text-center !rounded-2xl py-4 text-xs">
+                    <i class="fa-brands fa-whatsapp mr-2"></i>Enviar Comprovante no WhatsApp
+                </a>
+                <button id="btn-fechar-pix" onclick="fecharPix()" class="hidden w-full mt-3 text-[9px] font-extrabold uppercase tracking-widest text-gray-400 hover:text-gray-700 transition-colors py-2">
+                    Voltar às compras
                 </button>
             </div>
         </div>
@@ -453,6 +487,7 @@
         let categoriaAtiva = "todas";
         let colecaoAtiva = "todas";
         let produtoAtivo = null;
+        let pixCode = "";
         let corAtiva = 0;
         let tamAtivo = null;
         let qtdAtiva = 1;
@@ -728,12 +763,15 @@
             $("checkout-modal").classList.remove("hidden");
         }
 
-        function fecharCheckout() { $("checkout-modal").classList.add("hidden"); }
+        function fecharCheckout() { fecharPix(); }
 
         function selectMethod(m) {
             selectedMethod = m;
             $("method-pix").classList.toggle("active", m === "pix");
             $("method-card").classList.toggle("active", m === "card");
+            $("checkout-info").innerHTML = m === "pix"
+                ? `<i class="fa-solid fa-qrcode text-teal-500 mr-1"></i>Pague direto com QR Code Pix — sem sair da loja`
+                : `<i class="fa-solid fa-shield-halved text-green-500 mr-1"></i>Você será redirecionado para o checkout seguro da InfinitePay`;
             resumoCheckout();
         }
 
@@ -799,6 +837,10 @@
                     })
                 });
                 const d = await r.json();
+                if (d.ok && d.modo === "pix") {
+                    mostrarPix(d);
+                    return;
+                }
                 if (d.ok && d.url) {
                     window.location.href = d.url;
                     return;
@@ -809,6 +851,60 @@
             }
             btn.disabled = false;
             btn.innerText = "Gerar Pagamento Seguro";
+        }
+
+        // ===================== PIX DIRETO (QR Code com a chave pago@droppfy.com) =====================
+        function mostrarPix(d) {
+            pixCode = d.pix.copiaECola;
+            $("checkout-titulo").innerText = "Pagamento via Pix";
+            $("checkout-form").classList.add("hidden");
+            $("pix-panel").classList.remove("hidden");
+            $("pix-valor").innerText = "R$ " + fmt(d.pix.valorFinal);
+            $("pix-chave").innerText = d.pix.chave;
+            $("pix-nsu").innerText = d.nsu;
+            $("btn-finalizar").classList.add("hidden");
+            const wa = $("btn-comprovante");
+            wa.classList.remove("hidden");
+            wa.href = "https://api.whatsapp.com/send/?phone=" + WHATSAPP + "&text=" + encodeURIComponent(
+                "Olá, Miquely Modas! 💗 Acabei de fazer o pagamento via PIX do meu pedido NSU " +
+                d.nsu + " no valor de R$ " + fmt(d.pix.valorFinal) +
+                ". Segue o comprovante abaixo."
+            );
+            $("btn-fechar-pix").classList.remove("hidden");
+            const qr = $("pix-qr");
+            qr.innerHTML = "";
+            if (window.QRCode) {
+                new QRCode(qr, { text: d.pix.copiaECola, width: 210, height: 210, correctLevel: QRCode.CorrectLevel.M });
+            } else {
+                qr.innerText = d.pix.copiaECola;
+            }
+            cart = [];
+            salvarCart();
+            updateCart();
+        }
+
+        function copiarPix() {
+            if (!pixCode) return;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(pixCode)
+                    .then(() => toast("Código Pix copiado! Cole no app do banco.", "ok"))
+                    .catch(() => toast("Não foi possível copiar automaticamente.", "erro"));
+            } else {
+                toast("Não foi possível copiar automaticamente.", "erro");
+            }
+        }
+
+        function fecharPix() {
+            $("checkout-modal").classList.add("hidden");
+            $("checkout-form").classList.remove("hidden");
+            $("pix-panel").classList.add("hidden");
+            const btn = $("btn-finalizar");
+            btn.classList.remove("hidden");
+            btn.disabled = false;
+            btn.innerText = "Gerar Pagamento Seguro";
+            $("btn-comprovante").classList.add("hidden");
+            $("btn-fechar-pix").classList.add("hidden");
+            $("checkout-titulo").innerText = "Dados do Pedido";
         }
 
         // ===================== MEDIDAS =====================

@@ -11,6 +11,9 @@
 
 const MARGEM_LUCRO = 1.5;
 const MIN_ORDER = 800;
+const PIX_KEY = "pago@droppfy.com";
+const PIX_NOME = "MIQUELY MODAS";
+const PIX_CIDADE = "BRASILIA";
 
 const CATALOGO_BASE = "https://novidadesnaloja.moda/mikaelenascimento/72F3A57/catalogovirtual";
 const CATALOGO_API = "https://novidadesnaloja.moda/php/";
@@ -324,12 +327,44 @@ async function handleLead(request, env) {
 }
 
 // ------------------------------------------------------------
-//  Checkout -> InfinitePay (chave fica em segredo do Worker)
+//  PIX direto — QR Code estático com a chave pago@droppfy.com
+//  (EMV BR Code "copia e cola" + CRC16-CCITT, padrão Banco Central)
+// ------------------------------------------------------------
+function crc16Pix(str) {
+  let crc = 0xffff;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= str.charCodeAt(i) << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = crc & 0x8000 ? ((crc << 1) ^ 0x1021) & 0xffff : (crc << 1) & 0xffff;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, "0");
+}
+
+function emv(tag, valor) {
+  if (valor === undefined || valor === null || valor === "") return "";
+  return `${tag}${String(valor.length).padStart(2, "0")}${valor}`;
+}
+
+function buildPixCopiaECola({ chave, valor, txid }) {
+  const gui = emv("00", "br.gov.bcb.pix") + emv("01", chave);
+  let payload =
+    emv("00", "01") +
+    emv("26", gui) +
+    emv("52", "0000") +
+    emv("53", "986") +
+    emv("54", valor.toFixed(2)) +
+    emv("58", "BR") +
+    emv("59", PIX_NOME) +
+    emv("60", PIX_CIDADE);
+  if (txid) payload += emv("62", emv("05", txid));
+  return payload + "6304" + crc16Pix(payload + "6304");
+}
+
+// ------------------------------------------------------------
+//  Checkout: PIX direto (QR Code na loja) ou InfinitePay (cartão)
 // ------------------------------------------------------------
 async function handleCheckout(request, env, ctx) {
-  const key = env.INFINITEPAY_API_KEY;
-  if (!key) return json({ ok: false, erro: "Gateway de pagamento não configurado." }, 503);
-
   let dados;
   try {
     dados = await request.json();
@@ -377,6 +412,48 @@ async function handleCheckout(request, env, ctx) {
   const origin = String(dados.origin || "https://moda.droppfy.com").replace(/[^a-zA-Z0-9:/.\-_]/g, "");
   const nsu = `MM${Date.now()}${Math.floor(Math.random() * 900 + 100)}`;
 
+  // ---- PIX DIRETO: QR Code com a chave pago@droppfy.com (sem gateway) ----
+  if (metodo === "pix") {
+    const valorFinal = Math.round(total * 0.95) / 100;
+    const copiaECola = buildPixCopiaECola({
+      chave: PIX_KEY,
+      valor: valorFinal,
+      txid: nsu,
+    });
+
+    const msg =
+      `🛒 *PEDIDO PIX GERADO — Miquely Modas*\n\n` +
+      `👤 *CLIENTE:* ${cliente.name}\n` +
+      `🆔 *CPF:* ${cliente.cpf || "—"}\n` +
+      `📧 *EMAIL:* ${cliente.email}\n` +
+      `📱 *WHATS:* ${cliente.phone || "—"}\n` +
+      `📍 *CEP:* ${cliente.cep || "—"}\n\n` +
+      `🛒 *PRODUTOS:*\n${linhas.join("\n")}\n\n` +
+      `💵 *TOTAL:* R$ ${totalReais.toFixed(2).replace(".", ",")}\n` +
+      `🏷️ *PIX (5% OFF):* R$ ${valorFinal.toFixed(2).replace(".", ",")}\n` +
+      `🔑 *CHAVE:* ${PIX_KEY}\n` +
+      `🧾 *NSU:* ${nsu}\n` +
+      `⏳ _Aguardando comprovante_`;
+    ctx.waitUntil(sendTelegram(env, msg));
+
+    return json({
+      ok: true,
+      modo: "pix",
+      nsu,
+      pix: {
+        chave: PIX_KEY,
+        valor: totalReais,
+        desconto: 5,
+        valorFinal,
+        copiaECola,
+      },
+    });
+  }
+
+  // ---- CARTÃO: gateway InfinitePay ----
+  const key = env.INFINITEPAY_API_KEY;
+  if (!key) return json({ ok: false, erro: "Gateway de pagamento não configurado." }, 503);
+
   const payload = {
     handle: "partner12",
     order_nsu: nsu,
@@ -391,8 +468,8 @@ async function handleCheckout(request, env, ctx) {
       require_delivery_address: true,
       single_payment: true,
       valid_until: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
-      payment_methods_enabled: ["credit_card", "pix"],
-      discounts: { pix: 5, credit_card: 0.5 },
+      payment_methods_enabled: ["credit_card"],
+      discounts: { credit_card: 0.5 },
     },
     webhook: {
       url: `${new URL(request.url).origin}/webhook/infinitepay`,
@@ -439,7 +516,7 @@ async function handleCheckout(request, env, ctx) {
       `📱 *WHATS:* ${cliente.phone || "—"}\n\n` +
       `🛒 *PRODUTOS:*\n${linhas.join("\n")}\n\n` +
       `💵 *TOTAL:* R$ ${totalReais.toFixed(2).replace(".", ",")}\n` +
-      `🔐 *PAGAMENTO:* ${metodo === "pix" ? "PIX (5% OFF)" : "CARTÃO DE CRÉDITO"}\n` +
+      `🔐 *PAGAMENTO:* CARTÃO DE CRÉDITO (0,5% OFF)\n` +
       `🧾 *NSU:* ${nsu}`;
     ctx.waitUntil(sendTelegram(env, msg));
 
