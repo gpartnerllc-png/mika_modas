@@ -378,7 +378,7 @@ async function handleCheckout(request, env, ctx) {
   const nsu = `MM${Date.now()}${Math.floor(Math.random() * 900 + 100)}`;
 
   const payload = {
-    handle: "droppfy",
+    handle: "partner12",
     order_nsu: nsu,
     redirect_url: `${origin}/#pedido-enviado`,
     items: itensPay,
@@ -387,7 +387,7 @@ async function handleCheckout(request, env, ctx) {
       email: String(cliente.email).slice(0, 120),
     },
     options: {
-      assured_installments: 0,
+      assured_installments: 3,
       require_delivery_address: true,
       single_payment: true,
       valid_until: new Date(Date.now() + 48 * 3600 * 1000).toISOString(),
@@ -403,6 +403,7 @@ async function handleCheckout(request, env, ctx) {
       order_nsu: nsu,
       customer_cpf: String(cliente.cpf || "").slice(0, 20),
       customer_phone: String(cliente.phone || "").slice(0, 30),
+      pix_key: "pago@droppfy.com",
     },
   };
 
