@@ -83,10 +83,8 @@
     </header>
 
     <!-- ===================== HERO CARROSSEL ===================== -->
-    <section class="relative h-[52vh] md:h-[72vh] bg-gray-200 overflow-hidden" id="main-carousel">
-        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066305_bannerPrincipal1.jpg" class="active" alt="Coleção Miquely Modas">
-        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066304_bannerPrincipal0.jpg" alt="Lingerie em atacado">
-        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1770066305_bannerPrincipal2.jpg" alt="Novidades da fábrica">
+    <section class="relative h-[52vh] md:h-[72vh] bg-gradient-to-br from-gray-900 via-rose-950 to-gray-900 overflow-hidden" id="main-carousel">
+        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1790373812_bannerMobile0.jpg" class="active" alt="Coleção Miquely Modas" onerror="this.style.display='none'">
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent z-10 pointer-events-none"></div>
         <div class="absolute inset-0 z-20 flex flex-col items-center justify-end pb-14 md:pb-24 text-center px-4 pointer-events-none">
             <p class="text-white/90 tracking-[0.5em] text-[9px] md:text-xs font-bold uppercase mb-3 animate-float">Moda Íntima • Lingerie • Atacado</p>
@@ -833,19 +831,46 @@
             history.replaceState(null, "", location.pathname + location.search);
         }
 
-        // ===================== CARROSSEL =====================
+        // ===================== CARROSSEL (BANNERS DINÂMICOS DA FÁBRICA) =====================
         let bannerIdx = 0;
-        setInterval(() => {
-            const imgs = document.querySelectorAll("#main-carousel img");
-            if (imgs.length < 2) return;
-            imgs[bannerIdx].classList.remove("active");
-            bannerIdx = (bannerIdx + 1) % imgs.length;
-            imgs[bannerIdx].classList.add("active");
-        }, 5000);
+        let carrosselTimer = null;
+
+        async function carregarBanners() {
+            try {
+                const r = await fetch(API_BASE + "/api/banners");
+                const d = await r.json();
+                const banners = (d.banners && d.banners.length) ? d.banners : [];
+                if (!banners.length) return;
+                const sec = $("main-carousel");
+                sec.querySelectorAll("img").forEach(i => i.remove());
+                banners.forEach((url, i) => {
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = "Miquely Modas — " + (i + 1);
+                    img.onerror = () => img.remove();
+                    if (i === 0) img.classList.add("active");
+                    sec.prepend(img);
+                });
+                if (banners.length > 1) iniciarCarrossel();
+            } catch (e) { /* fundo elegante permanece */ }
+        }
+
+        function iniciarCarrossel() {
+            if (carrosselTimer) clearInterval(carrosselTimer);
+            bannerIdx = 0;
+            carrosselTimer = setInterval(() => {
+                const imgs = document.querySelectorAll("#main-carousel img");
+                if (imgs.length < 2) return;
+                imgs[bannerIdx].classList.remove("active");
+                bannerIdx = (bannerIdx + 1) % imgs.length;
+                imgs[bannerIdx].classList.add("active");
+            }, 5000);
+        }
 
         // ===================== INICIALIZAÇÃO =====================
         updateCart();
         carregarProdutos();
+        carregarBanners();
         verificarHash();
     </script>
 </body>
