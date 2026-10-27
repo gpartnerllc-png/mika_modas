@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atacado | Miquely Modas Lingerie</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="https://novidadesnaloja.moda/clientes/47149826000180_20240122230901.jpeg">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap');
+        body { font-family: 'Montserrat', sans-serif; }
+        html { scroll-behavior: smooth; }
+
+        /* ============ EFEITOS 3D (mantidos do projeto original) ============ */
+        .cart-sidebar { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .product-img { transition: transform 0.5s ease; border-radius: 1.5rem; }
+        .product-card { transition: all 0.3s ease; }
+        .product-card:hover { transform: translateY(-10px); }
+        .product-card:hover .product-img { transform: scale(1.02); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .min-order-alert { font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        #main-carousel img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s ease-in-out; }
+        #main-carousel img.active { opacity: 1; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 5px rgba(219, 39, 119, 0.4); opacity: 1; } 50% { box-shadow: 0 0 25px rgba(219, 39, 119, 0.8); opacity: 0.8; } }
+        .animate-pulse-glow { animation: pulse-glow 2s infinite; }
+        .card-3d { background: #fff; padding: 6px; border-radius: 6px; box-shadow: 0 3px 0px #d1d5db; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; border: 1px solid #e5e7eb; cursor: pointer; }
+        .card-3d:hover { transform: translateY(-2px); box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; }
+        .card-3d.active { box-shadow: 0 5px 0px #db2777; border-color: #fbcfe8; background: #fff5f7; }
+
+        /* ============ NOVOS DETALHES ELEGANTES ============ */
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .marquee-track { display: flex; width: max-content; animation: marquee 28s linear infinite; }
+        @keyframes shimmer { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+        .skeleton { background: linear-gradient(90deg, #f3f4f6 25%, #e9eaee 50%, #f3f4f6 75%); background-size: 800px 100%; animation: shimmer 1.4s infinite; }
+        @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+        .animate-pop { animation: pop .5s cubic-bezier(0.4, 0, 0.2, 1) both; }
+        @keyframes toast-in { from { transform: translateY(16px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast { animation: toast-in .3s ease both; }
+        .swatch { display: inline-block; width: 14px; height: 14px; border-radius: 9999px; border: 1px solid rgba(0,0,0,.1); box-shadow: 0 1px 2px rgba(0,0,0,.15); }
+        .swatch-btn { width: 32px; height: 32px; border-radius: 9999px; border: 2px solid #e5e7eb; cursor: pointer; transition: all .15s; box-shadow: inset 0 0 0 2px #fff; }
+        .swatch-btn:hover { transform: scale(1.1); }
+        .swatch-btn.active { border-color: #db2777; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #db2777; }
+        .size-btn { border: 1px solid #e5e7eb; border-radius: 10px; padding: 9px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all .15s; background: #fff; }
+        .size-btn:hover { border-color: #fbcfe8; }
+        .size-btn.active { background: #db2777; color: #fff; border-color: #db2777; box-shadow: 0 3px 0 #9d174d; }
+        .chip { padding: 7px 16px; border-radius: 9999px; border: 1px solid #e5e7eb; background: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; cursor: pointer; transition: all .15s; }
+        .chip:hover { border-color: #fbcfe8; }
+        .chip.active { background: #111; color: #fff; border-color: #111; box-shadow: 0 3px 0 #db2777; }
+        .btn-pink { background: #db2777; color: #fff; font-weight: 800; font-size: 11px; letter-spacing: .15em; text-transform: uppercase; padding: 12px 28px; border-radius: 9999px; box-shadow: 0 5px 0 #9d174d; transition: all .15s; display: inline-block; }
+        .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #9d174d; }
+        .btn-dark { background: #111; color: #fff; font-weight: 800; font-size: 11px; letter-spacing: .15em; text-transform: uppercase; padding: 12px 28px; border-radius: 9999px; box-shadow: 0 5px 0 #000; transition: all .15s; display: inline-block; }
+        .btn-dark:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #000; }
+        .add-btn { width: 100%; background: #111; color: #fff; font-size: 10px; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; padding: 10px 0; border-radius: 12px; box-shadow: 0 4px 0 #000; transition: all .15s; cursor: pointer; }
+        .add-btn:hover { background: #db2777; box-shadow: 0 4px 0 #9d174d; transform: translateY(-1px); }
+        .qty-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid #e5e7eb; font-weight: 800; cursor: pointer; background: #fff; transition: all .15s; }
+        .qty-btn:hover { border-color: #db2777; color: #db2777; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { scrollbar-width: none; }
+        .fade-in { animation: toast-in .4s ease both; }
+    </style>
+</head>
+<body class="bg-white text-gray-900">
+
+    <!-- ===================== HEADER ===================== -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl md:text-2xl font-extrabold tracking-tighter text-black uppercase">
+                Miquely<span class="font-light text-pink-600">Modas</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="hidden md:flex card-3d gap-2 px-3 py-2 !rounded-full text-[10px] font-bold uppercase">
+                    <i class="fa-brands fa-whatsapp text-green-500 text-sm"></i> Fale conosco
+                </a>
+                <div class="relative cursor-pointer" onclick="toggleCart()">
+                    <i class="fa-solid fa-bag-shopping text-2xl"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== HERO CARROSSEL ===================== -->
+    <section class="relative h-[52vh] md:h-[72vh] bg-gradient-to-br from-gray-900 via-rose-950 to-gray-900 overflow-hidden" id="main-carousel">
+        <img src="https://imagens.viashopmoda.com.br/upload/Goiania_Intuicao/Principal/1790373812_bannerMobile0.jpg" class="active" alt="Coleção Miquely Modas" onerror="this.style.display='none'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-end pb-14 md:pb-24 text-center px-4 pointer-events-none">
+            <p class="text-white/90 tracking-[0.5em] text-[9px] md:text-xs font-bold uppercase mb-3 animate-float">Moda Íntima • Lingerie • Atacado</p>
+            <h1 class="text-white text-3xl md:text-6xl font-extrabold uppercase tracking-tight drop-shadow-lg">Direto da fábrica<br>para a sua loja</h1>
+            <p class="text-white/80 text-[10px] md:text-xs mt-3 font-semibold uppercase tracking-[0.25em]">Pedido mínimo R$ 800 • Pix com 5% OFF</p>
+            <div class="flex gap-3 mt-6 pointer-events-auto">
+                <a href="#catalogo" class="btn-pink">Ver catálogo</a>
+                <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="btn-dark"><i class="fa-brands fa-whatsapp mr-1"></i> WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FAIXA PROMOCIONAL (MARQUEE) ===================== -->
+    <div class="bg-black text-white overflow-hidden py-2.5 border-b-4 border-pink-600">
+        <div class="marquee-track font-bold text-[10px] tracking-[0.25em] uppercase">
+            <span class="px-6">✦ Atacado — Pedido mínimo R$ 800,00</span>
+            <span class="px-6">✦ Pix com 5% de desconto</span>
+            <span class="px-6">✦ Cartão de crédito com 0,5% OFF</span>
+            <span class="px-6">✦ Novidades toda semana direto da fábrica</span>
+            <span class="px-6">✦ Enviamos para todo o Brasil</span>
+            <span class="px-6">✦ Qualidade premium de Goiânia</span>
+            <span class="px-6">✦ Atacado — Pedido mínimo R$ 800,00</span>
+            <span class="px-6">✦ Pix com 5% de desconto</span>
+            <span class="px-6">✦ Cartão de crédito com 0,5% OFF</span>
+            <span class="px-6">✦ Novidades toda semana direto da fábrica</span>
+            <span class="px-6">✦ Enviamos para todo o Brasil</span>
+            <span class="px-6">✦ Qualidade premium de Goiânia</span>
+        </div>
+    </div>
+
+    <!-- ===================== CATÁLOGO ===================== -->
+    <main id="catalogo" class="container mx-auto px-4 py-10 md:py-14 pb-24">
+        <div class="text-center mb-8">
+            <p class="text-[9px] tracking-[0.45em] text-pink-600 font-bold uppercase mb-2">Coleção atualizada automaticamente</p>
+            <h3 class="text-2xl md:text-3xl font-extrabold uppercase tracking-[0.12em] text-gray-900">Catálogo Atacado</h3>
+            <p id="catalogo-info" class="text-[9px] text-gray-400 uppercase font-bold tracking-wider mt-2">Carregando coleção...</p>
+        </div>
+
+        <div class="relative mb-5 max-w-md mx-auto">
+            <i class="fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 text-sm"></i>
+            <input id="busca" oninput="renderizar()" placeholder="Buscar produto, cor ou modelo..." class="w-full pl-12 pr-4 py-3.5 rounded-full border border-gray-200 shadow-sm text-sm outline-none focus:ring-2 focus:ring-pink-400 bg-white">
+        </div>
+
+        <div id="filtro-categorias" class="flex gap-2 overflow-x-auto no-scrollbar mb-2 justify-start md:justify-center px-1"></div>
+        <div id="filtro-colecoes" class="flex gap-2 overflow-x-auto no-scrollbar justify-start md:justify-center px-1 mb-8"></div>
+
+        <div id="product-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-7">
+            <div class="skeleton rounded-3xl aspect-[3/4]"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4]"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4]"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4] hidden md:block"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4] hidden md:block"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4] hidden md:block"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4] hidden md:block"></div>
+            <div class="skeleton rounded-3xl aspect-[3/4] hidden lg:block"></div>
+        </div>
+
+        <div id="vazio" class="hidden text-center py-20">
+            <i class="fa-solid fa-magnifying-glass-minus text-4xl text-gray-200"></i>
+            <p class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-4">Nenhuma peça encontrada</p>
+            <button onclick="limparFiltros()" class="btn-pink mt-5">Limpar filtros</button>
+        </div>
+    </main>
+
+    <!-- ===================== VANTAGENS ===================== -->
+    <section class="container mx-auto px-4 pb-16">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="card-3d !p-5 flex-col gap-2 text-center !cursor-default">
+                <i class="fa-solid fa-warehouse text-pink-600 text-2xl"></i>
+                <b class="text-[9px] uppercase tracking-wider">Atacado Real</b>
+                <span class="text-[8px] text-gray-400 uppercase font-bold">Direto da fábrica</span>
+            </div>
+            <div class="card-3d !p-5 flex-col gap-2 text-center !cursor-default">
+                <i class="fa-brands fa-pix text-teal-500 text-2xl"></i>
+                <b class="text-[9px] uppercase tracking-wider">Pix 5% OFF</b>
+                <span class="text-[8px] text-gray-400 uppercase font-bold">Pagamento instantâneo</span>
+            </div>
+            <div class="card-3d !p-5 flex-col gap-2 text-center !cursor-default">
+                <i class="fa-solid fa-truck-fast text-blue-600 text-2xl"></i>
+                <b class="text-[9px] uppercase tracking-wider">Todo o Brasil</b>
+                <span class="text-[8px] text-gray-400 uppercase font-bold">Entrega para sua loja</span>
+            </div>
+            <div class="card-3d !p-5 flex-col gap-2 text-center !cursor-default">
+                <i class="fa-solid fa-gem text-purple-600 text-2xl"></i>
+                <b class="text-[9px] uppercase tracking-wider">Qualidade Premium</b>
+                <span class="text-[8px] text-gray-400 uppercase font-bold">Seleção exclusiva</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== RODAPÉ ENCANTADOR ===================== -->
+    <footer class="bg-gray-950 text-white mt-4">
+        <div class="container mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+            <div>
+                <div class="text-2xl font-extrabold tracking-tighter uppercase">
+                    Miquely<span class="font-light text-pink-400">Modas</span>
+                </div>
+                <p class="text-[11px] text-gray-400 mt-4 leading-relaxed">
+                    Lingeries selecionadas com carinho para lojistas de todo o Brasil.
+                    Atacado direto da fábrica, com qualidade, elegância e o melhor preço de verdade. 💗
+                </p>
+                <div class="flex gap-3 mt-5">
+                    <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="card-3d !bg-gray-800 !border-gray-700 !shadow-none" title="WhatsApp">
+                        <i class="fa-brands fa-whatsapp text-green-400 text-lg"></i>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank" class="card-3d !bg-gray-800 !border-gray-700 !shadow-none" title="Instagram">
+                        <i class="fa-brands fa-instagram text-pink-400 text-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] text-pink-400 mb-4">Atendimento</h4>
+                <ul class="space-y-3 text-[11px] text-gray-300">
+                    <li><a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-whatsapp text-green-400 mr-2"></i>(61) 98344-6343</a></li>
+                    <li><i class="fa-regular fa-clock text-gray-500 mr-2"></i>Seg. a Sáb. — 8h às 18h</li>
+                    <li><i class="fa-solid fa-location-dot text-gray-500 mr-2"></i>Goiânia • Brasília</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] text-pink-400 mb-4">Informações</h4>
+                <ul class="space-y-3 text-[11px] text-gray-300">
+                    <li><button onclick="abrirMedidas()" class="hover:text-white transition-colors"><i class="fa-solid fa-ruler text-gray-500 mr-2"></i>Tabela de Medidas</button></li>
+                    <li><a href="#catalogo" class="hover:text-white transition-colors"><i class="fa-solid fa-bag-shopping text-gray-500 mr-2"></i>Pedido mínimo R$ 800</a></li>
+                    <li><i class="fa-solid fa-box-open text-gray-500 mr-2"></i>Envio para todo o Brasil</li>
+                    <li><i class="fa-solid fa-rotate-left text-gray-500 mr-2"></i>Garantia de qualidade</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-[10px] font-extrabold uppercase tracking-[0.3em] text-pink-400 mb-4">Pagamento Seguro</h4>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div class="card-3d" title="Pix"><i class="fa-brands fa-pix text-teal-500 text-sm"></i></div>
+                    <div class="card-3d" title="Visa"><i class="fa-brands fa-cc-visa text-blue-800 text-sm"></i></div>
+                    <div class="card-3d" title="Mastercard"><i class="fa-brands fa-cc-mastercard text-red-500 text-sm"></i></div>
+                    <div class="card-3d" title="Boleto"><i class="fa-solid fa-barcode text-gray-700 text-sm"></i></div>
+                    <div class="card-3d bg-green-50 border-green-200">
+                        <i class="fa-solid fa-shield-check text-green-600 text-xs"></i>
+                        <span class="text-[8px] font-bold text-green-700 ml-1">SEGURO</span>
+                    </div>
+                </div>
+                <p class="text-[9px] text-gray-400 mt-4 leading-relaxed">
+                    Processado com segurança por <strong class="text-gray-200">InfinitePay</strong><br>
+                    Criptografia 256-bits • Certificado SSL
+                </p>
+            </div>
+        </div>
+        <div class="border-t border-gray-800">
+            <div class="container mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-3 text-[8px] md:text-[9px] text-gray-500 uppercase font-bold tracking-[0.2em] text-center">
+                <span>© 2026 Miquely Modas — CNPJ 47.149.826/0001-80 — Direitos Reservados</span>
+                <span><i class="fa-solid fa-lock text-green-500 mr-1"></i>Dados protegidos conforme LGPD • Tecnologia Cloudflare</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===================== SACOLA LATERAL ===================== -->
+    <div id="cart-sidebar" class="fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[100] translate-x-full cart-sidebar flex flex-col">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h2 class="font-bold uppercase tracking-widest text-sm text-pink-600">Pedido de Atacado</h2>
+            <button onclick="toggleCart()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+        </div>
+        <div class="px-6 pt-4">
+            <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div id="cart-progress" class="h-full bg-gradient-to-r from-pink-500 to-pink-600 rounded-full transition-all duration-500" style="width:0%"></div>
+            </div>
+            <p class="text-[8px] font-bold uppercase tracking-widest text-gray-400 mt-2 mb-3">Meta: R$ 800,00</p>
+        </div>
+        <div id="cart-content" class="flex-1 overflow-y-auto px-6 pb-4 space-y-4"></div>
+        <div class="p-6 border-t bg-white">
+            <div class="flex justify-between font-bold text-lg mb-2">
+                <span class="text-gray-500 text-sm uppercase">Subtotal:</span>
+                <span id="cart-total">R$ 0,00</span>
+            </div>
+            <div id="min-order-msg" class="p-3 text-center mb-4 min-order-alert text-red-600"></div>
+            <div class="bg-gray-50 text-center rounded-2xl overflow-hidden border shadow-inner">
+                <button id="btn-checkout" onclick="abrirCheckout()" class="w-full bg-gray-300 text-white py-4 font-bold uppercase text-[11px] cursor-not-allowed rounded-2xl transition-all" disabled>
+                    Finalizar Pedido no Atacado
+                </button>
+                <p class="text-[9px] py-2 text-gray-500 uppercase font-bold tracking-tighter">
+                    Processado com segurança por <strong>InfinitePay</strong> • 256-bits
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="cart-backdrop" class="fixed inset-0 bg-black/40 z-[90] hidden" onclick="toggleCart()"></div>
+
+    <!-- ===================== MODAL DO PRODUTO (CORES + TAMANHOS) ===================== -->
+    <div id="product-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden fade-in">
+            <div class="flex justify-between items-center p-5 border-b bg-gray-50">
+                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-xs">Escolha cor e tamanho</h3>
+                <button onclick="fecharProduto()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+            </div>
+            <div class="grid md:grid-cols-2 max-h-[75vh] overflow-y-auto">
+                <div class="bg-gray-50 relative">
+                    <img id="pm-foto" src="" class="w-full h-72 md:h-full object-cover" alt="Produto">
+                    <span id="pm-ref" class="absolute top-3 left-3 bg-white/90 backdrop-blur text-[8px] font-bold uppercase tracking-wider px-2 py-1 rounded-full text-gray-700"></span>
+                </div>
+                <div class="p-6 space-y-5">
+                    <div>
+                        <h4 id="pm-nome" class="font-extrabold uppercase tracking-tight text-base leading-tight"></h4>
+                        <div class="flex items-end gap-2 mt-2">
+                            <span id="pm-preco" class="text-pink-600 font-extrabold text-2xl"></span>
+                            <span id="pm-varejo" class="text-[10px] text-gray-400 line-through mb-1"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-2">Cor: <span id="pm-cor-nome" class="text-gray-800"></span></p>
+                        <div id="pm-cores" class="flex gap-3 flex-wrap"></div>
+                    </div>
+                    <div>
+                        <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-2">Tamanho</p>
+                        <div id="pm-tamanhos" class="grid grid-cols-5 gap-2"></div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <button class="qty-btn" onclick="qtdMenos()">−</button>
+                            <span id="pm-qtd" class="font-extrabold text-sm w-6 text-center">1</span>
+                            <button class="qty-btn" onclick="qtdMais()">+</button>
+                        </div>
+                        <span id="pm-total" class="font-extrabold text-lg text-pink-600"></span>
+                    </div>
+                    <button onclick="confirmarAdicionar()" class="btn-pink w-full !rounded-2xl text-center py-4">
+                        <i class="fa-solid fa-bag-shopping mr-2"></i>Adicionar à sacola
+                    </button>
+                    <p class="text-[8px] text-gray-400 font-bold uppercase tracking-wider text-center">Pedido mínimo de atacado: R$ 800,00</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== MODAL DE CHECKOUT ===================== -->
+    <div id="checkout-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden fade-in">
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-sm">Dados do Pedido</h3>
+                <button onclick="fecharCheckout()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+            </div>
+            <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div class="space-y-3">
+                    <input type="text" id="cust-name" placeholder="Nome Completo" class="w-full border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    <input type="email" id="cust-email" placeholder="Seu melhor E-mail" class="w-full border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="cust-cpf" placeholder="CPF" class="border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                        <input type="text" id="cust-phone" placeholder="WhatsApp" class="border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="cust-cep" placeholder="CEP" class="border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm" onblur="syncLead()">
+                        <input type="text" id="cust-city" placeholder="Cidade" class="border p-3 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none text-sm">
+                    </div>
+                </div>
+
+                <div class="border-t pt-4">
+                    <label class="flex items-center gap-2 mb-4 cursor-pointer">
+                        <input type="checkbox" id="lgpd-consent" checked class="accent-pink-600">
+                        <span class="text-[9px] text-gray-500 font-medium uppercase">Aceito os termos de processamento de dados (LGPD)</span>
+                    </label>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase mb-3 text-center">Selecione o método de pagamento</p>
+                    <div class="flex justify-center gap-4 mb-5">
+                        <div class="card-3d active flex-col gap-1 !py-3 !px-5" id="method-pix" onclick="selectMethod('pix')">
+                            <i class="fa-brands fa-pix text-xl text-teal-500"></i>
+                            <span class="text-[9px] font-extrabold uppercase">Pix</span>
+                            <span class="text-[8px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full">5% OFF</span>
+                        </div>
+                        <div class="card-3d flex-col gap-1 !py-3 !px-5" id="method-card" onclick="selectMethod('card')">
+                            <i class="fa-brands fa-cc-visa text-xl text-blue-800"></i>
+                            <span class="text-[9px] font-extrabold uppercase">Cartão</span>
+                            <span class="text-[8px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded-full">0,5% OFF</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-pink-50/60 border border-pink-100 rounded-2xl p-4 space-y-2">
+                        <div class="flex justify-between text-[10px] font-bold uppercase text-gray-500">
+                            <span>Subtotal</span><span id="res-subtotal">R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold uppercase text-green-600">
+                            <span id="res-desconto-label">Desconto Pix (5%)</span><span id="res-desconto">− R$ 0,00</span>
+                        </div>
+                        <div class="flex justify-between items-end pt-2 border-t border-pink-100">
+                            <span class="text-[10px] font-extrabold uppercase text-gray-800">Total a pagar</span>
+                            <span id="res-total" class="text-pink-600 font-extrabold text-xl">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <p class="text-[8px] text-gray-400 font-bold uppercase tracking-wider text-center mt-3">
+                        <i class="fa-solid fa-shield-halved text-green-500 mr-1"></i>
+                        Você será redirecionado para o checkout seguro da InfinitePay
+                    </p>
+                </div>
+            </div>
+            <div class="p-6 bg-gray-50 border-t">
+                <button id="btn-finalizar" onclick="finalizarCheckout()" class="w-full bg-pink-600 text-white py-4 rounded-2xl font-bold uppercase tracking-widest hover:bg-pink-700 shadow-lg transition-all text-xs">
+                    Gerar Pagamento Seguro
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== TABELA DE MEDIDAS ===================== -->
+    <div id="medidas-modal" class="fixed inset-0 z-[200] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden fade-in">
+            <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+                <h3 class="font-bold uppercase tracking-widest text-gray-800 text-sm">Tabela de Medidas</h3>
+                <button onclick="fecharMedidas()" class="text-2xl text-gray-400 hover:text-black transition-colors">&times;</button>
+            </div>
+            <div class="p-6">
+                <table class="w-full text-center text-[10px] uppercase font-bold">
+                    <thead>
+                        <tr class="bg-pink-600 text-white">
+                            <th class="py-2.5 rounded-l-xl">Tam.</th>
+                            <th class="py-2.5">Busto</th>
+                            <th class="py-2.5">Cintura</th>
+                            <th class="py-2.5 rounded-r-xl">Quadril</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600">
+                        <tr class="border-b border-gray-100"><td class="py-2.5 font-extrabold text-gray-900">P</td><td>80–85</td><td>60–65</td><td>86–91</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2.5 font-extrabold text-gray-900">M</td><td>85–90</td><td>65–70</td><td>91–96</td></tr>
+                        <tr class="border-b border-gray-100"><td class="py-2.5 font-extrabold text-gray-900">G</td><td>90–95</td><td>70–75</td><td>96–101</td></tr>
+                        <tr><td class="py-2.5 font-extrabold text-gray-900">GG</td><td>95–100</td><td>75–80</td><td>101–106</td></tr>
+                    </tbody>
+                </table>
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider text-center mt-4 leading-relaxed">
+                    Medidas em centímetros.<br>Sutiãs use o busto • Calcinhas use o quadril
+                </p>
+                <a href="https://api.whatsapp.com/send/?phone=5561983446343&text=Ol%C3%A1!%20Preciso%20de%20ajuda%20para%20escolher%20o%20tamanho%20ideal." target="_blank" class="btn-pink w-full text-center mt-4 !rounded-2xl py-3">
+                    <i class="fa-brands fa-whatsapp mr-2"></i>Tirar dúvida no WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== TELA DE SUCESSO (#pedido-enviado) ===================== -->
+    <div id="sucesso-overlay" class="fixed inset-0 z-[300] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden text-center p-8 animate-pop">
+            <div class="w-20 h-20 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <i class="fa-solid fa-check text-3xl text-green-600"></i>
+            </div>
+            <h3 class="font-extrabold uppercase tracking-widest text-gray-900">Pedido Criado!</h3>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-3 leading-relaxed">
+                Assim que o pagamento for confirmado,<br>nossa equipe entra em contato pelo WhatsApp.
+            </p>
+            <a href="https://api.whatsapp.com/send/?phone=5561983446343&text=Ol%C3%A1%2C%20Miquely%20Modas!%20%F0%9F%92%97%20Acabei%20de%20finalizar%20meu%20pedido%20de%20atacado%20e%20quero%20acompanhar%20o%20envio." target="_blank" class="btn-pink w-full text-center mt-6 !rounded-2xl py-4">
+                <i class="fa-brands fa-whatsapp mr-2"></i>Chamar no WhatsApp
+            </a>
+            <button onclick="fecharSucesso()" class="w-full mt-3 text-[9px] font-extrabold uppercase tracking-widest text-gray-400 hover:text-gray-700 transition-colors py-2">
+                Voltar às compras
+            </button>
+        </div>
+    </div>
+
+    <!-- ===================== NOTIFICAÇÕES (TOAST) ===================== -->
+    <div id="toasts" class="fixed top-4 right-4 z-[400] space-y-2 max-w-xs"></div>
+
+    <!-- ===================== BOTÃO FLUTUANTE WHATSAPP ===================== -->
+    <div class="fixed bottom-6 left-6 z-[100] pointer-events-auto">
+        <a href="https://api.whatsapp.com/send/?phone=5561983446343" target="_blank" class="block animate-float">
+            <img src="https://novidadesnaloja.moda/clientes/47149826000180_20240122230901.jpeg" class="w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-pink-500 shadow-lg animate-pulse-glow object-cover" alt="WhatsApp Miquely Modas">
+        </a>
+    </div>
+
+    <script>
+        // ===================== CONFIGURAÇÃO =====================
+        const API_BASE = location.hostname.includes("workers.dev") ? "" : "https://mika-modas.contatodroppfy.workers.dev";
+        const WHATSAPP = "5561983446343";
+        const MIN_ORDER = 800;
+        let catalogo = { produtos: [], filtros: {} };
+        let cart = [];
+        let categoriaAtiva = "todas";
+        let colecaoAtiva = "todas";
+        let produtoAtivo = null;
+        let corAtiva = 0;
+        let tamAtivo = null;
+        let qtdAtiva = 1;
+        let selectedMethod = "pix";
+
+        const fmt = (n) => (n || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const $ = (id) => document.getElementById(id);
+
+        try { cart = JSON.parse(sessionStorage.getItem("mika_cart") || "[]"); } catch (e) { cart = []; }
+        function salvarCart() { sessionStorage.setItem("mika_cart", JSON.stringify(cart)); }
+
+        function swatchStyle(s) {
+            if (!s) return "background-color:#111";
+            if (s.includes("background")) return s;
+            if (s.startsWith("http")) return `background-image:url('${s}');background-size:cover`;
+            return `background-color:${s}`;
+        }
+
+        // ===================== TOAST =====================
+        function toast(msg, tipo = "ok") {
+            const el = document.createElement("div");
+            el.className = "toast flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-[10px] font-bold uppercase tracking-wide " +
+                (tipo === "erro" ? "bg-red-600 text-white" : "bg-gray-900 text-white");
+            el.innerHTML = `<i class="fa-solid ${tipo === "erro" ? "fa-circle-exclamation" : "fa-circle-check"} text-sm"></i><span>${msg}</span>`;
+            $("toasts").appendChild(el);
+            setTimeout(() => {
+                el.style.opacity = "0";
+                el.style.transition = "opacity .3s";
+                setTimeout(() => el.remove(), 300);
+            }, 3500);
+        }
+
+        // ===================== CATÁLOGO (CDN AUTOMÁTICO DA FÁBRICA) =====================
+        async function carregarProdutos() {
+            try {
+                const r = await fetch(API_BASE + "/api/produtos");
+                const d = await r.json();
+                catalogo = d;
+                $("catalogo-info").innerText = `${d.total} peças • ${d.origem} • atualizado às ${new Date(d.atualizadoEm).toLocaleTimeString("pt-BR")}`;
+                montarFiltros();
+                renderizar();
+            } catch (e) {
+                $("product-list").innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <i class="fa-solid fa-cloud-bolt text-4xl text-gray-200"></i>
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-gray-400 mt-4">Não foi possível carregar o catálogo</p>
+                        <button onclick="carregarProdutos()" class="btn-pink mt-5">Tentar novamente</button>
+                    </div>`;
+                $("catalogo-info").innerText = "Falha de conexão com o catálogo";
+            }
+        }
+
+        function montarFiltros() {
+            const cats = catalogo.filtros?.categorias || {};
+            const cols = catalogo.filtros?.colecoes || {};
+            const catEl = $("filtro-categorias");
+            catEl.innerHTML = '<button class="chip active" onclick="setCategoria(\'todas\')">Todas</button>' +
+                Object.entries(cats).slice(0, 14).map(([id, n]) => `<button class="chip" onclick="setCategoria('${id}')">${n}</button>`).join("");
+            const colEl = $("filtro-colecoes");
+            if (Object.keys(cols).length) {
+                colEl.innerHTML = '<button class="chip active" onclick="setColecao(\'todas\')">Todas as coleções</button>' +
+                    Object.entries(cols).slice(0, 16).map(([id, n]) => `<button class="chip" onclick="setColecao('${id}')">${n}</button>`).join("");
+                colEl.classList.remove("hidden");
+            } else {
+                colEl.classList.add("hidden");
+            }
+        }
+
+        function setCategoria(id) {
+            categoriaAtiva = id;
+            [...$("filtro-categorias").children].forEach(c =>
+                c.classList.toggle("active", c.getAttribute("onclick") === `setCategoria('${id}')`));
+            renderizar();
+        }
+
+        function setColecao(id) {
+            colecaoAtiva = id;
+            [...$("filtro-colecoes").children].forEach(c =>
+                c.classList.toggle("active", c.getAttribute("onclick") === `setColecao('${id}')`));
+            renderizar();
+        }
+
+        function limparFiltros() {
+            $("busca").value = "";
+            categoriaAtiva = "todas";
+            colecaoAtiva = "todas";
+            montarFiltros();
+            renderizar();
+        }
+
+        function renderizar() {
+            const b = $("busca").value.toLowerCase().trim();
+            const lista = catalogo.produtos.filter(p => {
+                if (categoriaAtiva !== "todas" && String(p.categoria) !== categoriaAtiva) return false;
+                if (colecaoAtiva !== "todas" && String(p.colecao) !== colecaoAtiva) return false;
+                if (b && !(p.nome.toLowerCase().includes(b) || (p.cores || []).some(c => c.nome.includes(b)))) return false;
+                return true;
+            });
+            $("vazio").classList.toggle("hidden", lista.length > 0);
+            $("product-list").innerHTML = lista.map(cardHTML).join("");
+        }
+
+        function cardHTML(p) {
+            const catNome = catalogo.filtros?.categorias?.[String(p.categoria)] || "";
+            const swatches = (p.cores || []).slice(0, 4)
+                .map(c => `<span class="swatch" style="${swatchStyle(c.style)}" title="${c.nome}"></span>`).join("");
+            return `
+            <div class="product-card group bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+                <div class="relative overflow-hidden bg-gray-50 aspect-[3/4] cursor-pointer" onclick="abrirProduto('${p.id}')">
+                    <img src="${p.foto}" loading="lazy" class="product-img w-full h-full object-cover" alt="${p.nome}">
+                    <div class="absolute bottom-2 left-2 flex gap-1">${swatches}</div>
+                    ${catNome ? `<span class="absolute top-2 left-2 bg-white/90 backdrop-blur text-[8px] font-bold uppercase tracking-wider px-2 py-1 rounded-full text-gray-700">${catNome}</span>` : ""}
+                </div>
+                <div class="p-3 flex flex-col flex-1">
+                    <h4 class="text-[11px] font-bold uppercase tracking-tight leading-tight line-clamp-2">${p.nome}</h4>
+                    <div class="mt-1 flex items-end gap-2">
+                        <span class="text-pink-600 font-extrabold text-lg">R$ ${fmt(p.atacado)}</span>
+                        ${p.varejo > p.atacado ? `<span class="text-[9px] text-gray-400 line-through mb-0.5">de R$ ${fmt(p.varejo)}</span>` : ""}
+                    </div>
+                    <p class="text-[8px] text-gray-400 font-bold uppercase tracking-wider mt-1">Atacado • Mín R$ 800</p>
+                    <button class="add-btn mt-auto" onclick="abrirProduto('${p.id}')">Comprar</button>
+                </div>
+            </div>`;
+        }
+
+        // ===================== MODAL DO PRODUTO =====================
+        function abrirProduto(id) {
+            produtoAtivo = catalogo.produtos.find(p => String(p.id) === String(id));
+            if (!produtoAtivo) return;
+            corAtiva = 0;
+            qtdAtiva = 1;
+            tamAtivo = (produtoAtivo.cores[0]?.tamanhos || [])[0] || "P";
+            pintarProdutoModal();
+            $("product-modal").classList.remove("hidden");
+        }
+
+        function fecharProduto() { $("product-modal").classList.add("hidden"); }
+
+        function pintarProdutoModal() {
+            const cores = produtoAtivo.cores || [];
+            $("pm-foto").src = produtoAtivo.foto;
+            $("pm-nome").innerText = produtoAtivo.nome;
+            $("pm-ref").innerText = "Ref: " + (produtoAtivo.ref || produtoAtivo.id);
+            $("pm-preco").innerText = "R$ " + fmt(produtoAtivo.atacado);
+            $("pm-varejo").innerText = produtoAtivo.varejo > produtoAtivo.atacado ? "de R$ " + fmt(produtoAtivo.varejo) : "";
+            $("pm-cor-nome").innerText = (cores[corAtiva]?.nome || "").toUpperCase();
+            $("pm-cores").innerHTML = cores.map((c, i) =>
+                `<button class="swatch-btn ${i === corAtiva ? "active" : ""}" style="${swatchStyle(c.style)}" onclick="selectCor(${i})" title="${c.nome}"></button>`
+            ).join("");
+            const tams = cores[corAtiva]?.tamanhos || [];
+            $("pm-tamanhos").innerHTML = tams.map(t =>
+                `<button class="size-btn ${t === tamAtivo ? "active" : ""}" onclick="selectTam('${t}')">${t}</button>`
+            ).join("");
+            $("pm-qtd").innerText = qtdAtiva;
+            $("pm-total").innerText = "R$ " + fmt(produtoAtivo.atacado * qtdAtiva);
+        }
+
+        function selectCor(i) {
+            corAtiva = i;
+            tamAtivo = (produtoAtivo.cores[i]?.tamanhos || [])[0] || "P";
+            pintarProdutoModal();
+        }
+
+        function selectTam(t) {
+            tamAtivo = t;
+            pintarProdutoModal();
+        }
+
+        function qtdMais() { qtdAtiva = Math.min(50, qtdAtiva + 1); pintarProdutoModal(); }
+        function qtdMenos() { qtdAtiva = Math.max(1, qtdAtiva - 1); pintarProdutoModal(); }
+
+        function confirmarAdicionar() {
+            const corNome = (produtoAtivo.cores[corAtiva]?.nome || "cor padrão").toUpperCase();
+            cart.push({
+                id: produtoAtivo.id,
+                nome: produtoAtivo.nome,
+                cor: corNome,
+                tam: tamAtivo || "P",
+                qty: qtdAtiva,
+                preco: produtoAtivo.atacado,
+                foto: produtoAtivo.foto
+            });
+            salvarCart();
+            updateCart();
+            fecharProduto();
+            toast("Adicionado à sacola!");
+            abrirCart(true);
+        }
+
+        // ===================== SACOLA =====================
+        function toggleCart() {
+            const sb = $("cart-sidebar");
+            const aberto = !sb.classList.contains("translate-x-full");
+            sb.classList.toggle("translate-x-full", aberto);
+            $("cart-backdrop").classList.toggle("hidden", aberto);
+        }
+
+        function abrirCart(abrir) {
+            $("cart-sidebar").classList.toggle("translate-x-full", !abrir);
+            $("cart-backdrop").classList.toggle("hidden", !abrir);
+        }
+
+        function alterarQtd(i, delta) {
+            cart[i].qty += delta;
+            if (cart[i].qty < 1) cart.splice(i, 1);
+            salvarCart();
+            updateCart();
+        }
+
+        function removerItem(i) {
+            cart.splice(i, 1);
+            salvarCart();
+            updateCart();
+        }
+
+        function updateCart() {
+            const content = $("cart-content");
+            const total = cart.reduce((s, i) => s + i.preco * i.qty, 0);
+            const qtdTotal = cart.reduce((s, i) => s + i.qty, 0);
+            $("cart-total").innerText = "R$ " + fmt(total);
+            $("cart-count").innerText = qtdTotal;
+            $("cart-progress").style.width = Math.min(100, (total / MIN_ORDER) * 100) + "%";
+            const msg = $("min-order-msg");
+            const btn = $("btn-checkout");
+
+            if (!cart.length) {
+                content.innerHTML = '<p class="text-center py-10 text-[10px] uppercase font-bold text-gray-400 tracking-widest">Sua sacola está vazia</p>';
+                msg.className = "p-3 text-center mb-4 min-order-alert text-red-600";
+                msg.innerText = `Pedido mínimo de R$ ${fmt(MIN_ORDER)}`;
+                btn.disabled = true;
+                btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[11px] cursor-not-allowed rounded-2xl transition-all";
+                return;
+            }
+
+            content.innerHTML = cart.map((item, i) => `
+                <div class="flex gap-3 border-b border-gray-100 pb-3 items-center">
+                    <img src="${item.foto}" class="w-12 h-16 object-cover rounded-xl shadow border border-gray-100" alt="${item.nome}">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] font-bold uppercase tracking-tighter text-gray-800 truncate">${item.nome}</p>
+                        <p class="text-[8px] font-bold uppercase text-gray-400">${item.cor} • Tam ${item.tam}</p>
+                        <div class="flex items-center gap-2 mt-1.5">
+                            <button class="w-5 h-5 rounded-full bg-gray-100 hover:bg-pink-100 text-[11px] font-bold transition-colors" onclick="alterarQtd(${i},-1)">−</button>
+                            <span class="text-[10px] font-bold">${item.qty}</span>
+                            <button class="w-5 h-5 rounded-full bg-gray-100 hover:bg-pink-100 text-[11px] font-bold transition-colors" onclick="alterarQtd(${i},1)">+</button>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-pink-600 font-bold text-xs">R$ ${fmt(item.preco * item.qty)}</p>
+                        <button class="text-gray-300 hover:text-red-500 text-xs mt-1 transition-colors" onclick="removerItem(${i})"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>`).join("");
+
+            if (total >= MIN_ORDER) {
+                msg.innerText = "✓ Pedido mínimo atingido";
+                msg.className = "p-3 text-center mb-4 font-bold uppercase text-[10px] text-green-600";
+                btn.disabled = false;
+                btn.className = "w-full bg-pink-600 text-white py-4 font-bold uppercase text-[11px] shadow-xl hover:bg-pink-700 transition-all rounded-2xl animate-pulse-glow";
+            } else {
+                msg.innerText = `Faltam R$ ${fmt(MIN_ORDER - total)} para o atacado`;
+                msg.className = "p-3 text-center mb-4 min-order-alert text-red-600";
+                btn.disabled = true;
+                btn.className = "w-full bg-gray-300 text-white py-4 font-bold uppercase text-[11px] cursor-not-allowed rounded-2xl transition-all";
+            }
+        }
+
+        // ===================== CHECKOUT =====================
+        function abrirCheckout() {
+            if (cart.reduce((s, i) => s + i.preco * i.qty, 0) < MIN_ORDER) {
+                toast("Pedido mínimo de R$ " + fmt(MIN_ORDER), "erro");
+                return;
+            }
+            resumoCheckout();
+            $("checkout-modal").classList.remove("hidden");
+        }
+
+        function fecharCheckout() { $("checkout-modal").classList.add("hidden"); }
+
+        function selectMethod(m) {
+            selectedMethod = m;
+            $("method-pix").classList.toggle("active", m === "pix");
+            $("method-card").classList.toggle("active", m === "card");
+            resumoCheckout();
+        }
+
+        function resumoCheckout() {
+            const subtotal = cart.reduce((s, i) => s + i.preco * i.qty, 0);
+            const pct = selectedMethod === "pix" ? 5 : 0.5;
+            const desconto = subtotal * (pct / 100);
+            const total = subtotal - desconto;
+            $("res-subtotal").innerText = "R$ " + fmt(subtotal);
+            $("res-desconto-label").innerText = selectedMethod === "pix" ? "Desconto Pix (5%)" : "Desconto Cartão (0,5%)";
+            $("res-desconto").innerText = "− R$ " + fmt(desconto);
+            $("res-total").innerText = "R$ " + fmt(total);
+        }
+
+        async function syncLead() {
+            const email = $("cust-email").value.trim();
+            if (!email.includes("@") || sessionStorage.getItem("mika_lead") === email) return;
+            const payload = {
+                nome: $("cust-name").value.trim(),
+                email,
+                telefone: $("cust-phone").value.trim(),
+                cep: $("cust-cep").value.trim()
+            };
+            try {
+                await fetch(API_BASE + "/api/lead", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                sessionStorage.setItem("mika_lead", email);
+            } catch (e) { /* silencioso */ }
+        }
+
+        async function finalizarCheckout() {
+            const nome = $("cust-name").value.trim();
+            const email = $("cust-email").value.trim();
+            const cpf = $("cust-cpf").value.trim();
+            const consent = $("lgpd-consent").checked;
+
+            if (!nome || !email.includes("@") || !cpf) { toast("Preencha nome, e-mail e CPF.", "erro"); return; }
+            if (!consent) { toast("Aceite os termos da LGPD para continuar.", "erro"); return; }
+
+            const btn = $("btn-finalizar");
+            btn.disabled = true;
+            btn.innerText = "Gerando pagamento...";
+
+            try {
+                await syncLead();
+                const r = await fetch(API_BASE + "/api/checkout", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        method: selectedMethod,
+                        customer: {
+                            name: nome,
+                            email,
+                            cpf,
+                            phone: $("cust-phone").value.trim(),
+                            cep: $("cust-cep").value.trim()
+                        },
+                        items: cart.map(i => ({ id: i.id, nome: i.nome, cor: i.cor, tam: i.tam, qty: i.qty, preco: i.preco })),
+                        origin: location.origin
+                    })
+                });
+                const d = await r.json();
+                if (d.ok && d.url) {
+                    window.location.href = d.url;
+                    return;
+                }
+                toast(d.erro || "Não foi possível gerar o pagamento.", "erro");
+            } catch (e) {
+                toast("Falha de conexão. Tente novamente.", "erro");
+            }
+            btn.disabled = false;
+            btn.innerText = "Gerar Pagamento Seguro";
+        }
+
+        // ===================== MEDIDAS =====================
+        function abrirMedidas() { $("medidas-modal").classList.remove("hidden"); }
+        function fecharMedidas() { $("medidas-modal").classList.add("hidden"); }
+
+        // ===================== TELA DE SUCESSO =====================
+        function verificarHash() {
+            if (location.hash === "#pedido-enviado") {
+                cart = [];
+                salvarCart();
+                updateCart();
+                $("sucesso-overlay").classList.remove("hidden");
+            }
+        }
+        window.addEventListener("hashchange", verificarHash);
+
+        function fecharSucesso() {
+            $("sucesso-overlay").classList.add("hidden");
+            history.replaceState(null, "", location.pathname + location.search);
+        }
+
+        // ===================== CARROSSEL (BANNERS DINÂMICOS DA FÁBRICA) =====================
+        let bannerIdx = 0;
+        let carrosselTimer = null;
+
+        async function carregarBanners() {
+            try {
+                const r = await fetch(API_BASE + "/api/banners");
+                const d = await r.json();
+                const banners = (d.banners && d.banners.length) ? d.banners : [];
+                if (!banners.length) return;
+                const sec = $("main-carousel");
+                sec.querySelectorAll("img").forEach(i => i.remove());
+                banners.forEach((url, i) => {
+                    const img = document.createElement("img");
+                    img.src = url;
+                    img.alt = "Miquely Modas — " + (i + 1);
+                    img.onerror = () => img.remove();
+                    if (i === 0) img.classList.add("active");
+                    sec.prepend(img);
+                });
+                if (banners.length > 1) iniciarCarrossel();
+            } catch (e) { /* fundo elegante permanece */ }
+        }
+
+        function iniciarCarrossel() {
+            if (carrosselTimer) clearInterval(carrosselTimer);
+            bannerIdx = 0;
+            carrosselTimer = setInterval(() => {
+                const imgs = document.querySelectorAll("#main-carousel img");
+                if (imgs.length < 2) return;
+                imgs[bannerIdx].classList.remove("active");
+                bannerIdx = (bannerIdx + 1) % imgs.length;
+                imgs[bannerIdx].classList.add("active");
+            }, 5000);
+        }
+
+        // ===================== INICIALIZAÇÃO =====================
+        updateCart();
+        carregarProdutos();
+        carregarBanners();
+        verificarHash();
+    </script>
+</body>
+</html>

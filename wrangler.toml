@@ -1,0 +1,10 @@
+name = "mika-modas"
+main = "worker.js"
+compatibility_date = "2025-10-01"
+
+[assets]
+directory = "./site"
+binding = "ASSETS"
+
+[observability]
+enabled = true
